@@ -1,6 +1,6 @@
 #include <Hazel.h>
 #include "imgui\imgui.h"
-#include <glm/gtc/matrix_transform.hpp>
+#include <glm\gtc\matrix_transform.hpp>
 
 class ExampleLayer : public Hazel::Layer
 {
