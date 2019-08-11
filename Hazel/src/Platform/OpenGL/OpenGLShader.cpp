@@ -108,44 +108,55 @@ namespace Hazel {
 
 	void OpenGLShader::UploadUniformInt(const std::string& name, int value)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name); 
 		glUniform1i(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat(const std::string& name, float value)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name); 
 		glUniform1f(location, value);
 	}
 
 	void OpenGLShader::UploadUniformFloat2(const std::string& name, const glm::vec2& values)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name); 
 		glUniform2f(location, values.x, values.y);
 	}
 
 	void OpenGLShader::UploadUniformFloat3(const std::string& name, const glm::vec3& values)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name); 
 		glUniform3f(location, values.x, values.y, values.z);
 	}
 
 	void OpenGLShader::UploadUniformFloat4(const std::string& name, const glm::vec4& values)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name); 
 		glUniform4f(location, values.x, values.y, values.z, values.w);
 	}
 
 	void OpenGLShader::UploadUniformMat3(const std::string& name, const glm::mat3& matrix)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name);
 		glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
 	void OpenGLShader::UploadUniformMat4(const std::string& name, const glm::mat4& matrix)
 	{
-		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		GLint location = GetUniformLocation(name);
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+	int OpenGLShader::GetUniformLocation(const std::string& name) const
+	{
+		if (m_cacheUniformLocation.find(name) != m_cacheUniformLocation.end())
+			return m_cacheUniformLocation[name];
+
+		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		m_cacheUniformLocation[name] = location;
+
+		return location;
 	}
 
 }
