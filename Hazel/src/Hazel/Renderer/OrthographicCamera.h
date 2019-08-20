@@ -8,6 +8,7 @@ namespace Hazel {
 	{
 	public:
 		OrthographicCamera(float left, float right, float bottom, float top);
+		~OrthographicCamera() = default;
 
 		const glm::vec3& GetPosition() const { return m_position; }
 		void SetPosition(const glm::vec3& position) { m_position = position; RecalculateViewMatrix(); }

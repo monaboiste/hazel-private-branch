@@ -6,9 +6,9 @@ namespace Hazel {
 	{
 	public:
 		Timestep(float time = 0.0f)
-			: m_time(time)
-		{
-		}
+			: m_time(time) {}
+
+		~Timestep() = default;
 
 		operator float() const { return m_time; }
 

@@ -40,11 +40,14 @@ namespace Hazel {
 		BufferElement(ShaderDataType type, const std::string& name, bool normalized = false)
 			: Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0), Normalized(normalized) {}
 
+		~BufferElement() = default;
+
 		uint32_t GetComponentCount() const
 		{
 			switch (Type)
 			{
 				case ShaderDataType::Float:		return 1;
+				case ShaderDataType::Float2:	return 2;
 				case ShaderDataType::Float3:	return 3;
 				case ShaderDataType::Float4:	return 4;
 				case ShaderDataType::Mat3:		return 3 * 3;
@@ -69,6 +72,8 @@ namespace Hazel {
 		{
 			CalculateOffsetAndStride();
 		}
+
+		~BufferLayout() = default;
 
 		inline const std::vector<BufferElement>& GetElements() const { return m_elements; }
 		inline const uint32_t GetStride() const { return m_stride; }
@@ -98,7 +103,8 @@ namespace Hazel {
 	class VertexBuffer
 	{
 	public:
-		virtual ~VertexBuffer() {}
+		virtual ~VertexBuffer() = default;
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 		
@@ -111,7 +117,8 @@ namespace Hazel {
 	class IndexBuffer
 	{
 	public:
-		virtual ~IndexBuffer() {}
+		virtual ~IndexBuffer() = default;
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 

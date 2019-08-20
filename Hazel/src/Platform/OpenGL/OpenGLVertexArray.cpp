@@ -11,6 +11,7 @@ namespace Hazel {
 		switch (type)
 		{
 			case ShaderDataType::Float:		return GL_FLOAT;
+			case ShaderDataType::Float2:	return GL_FLOAT;
 			case ShaderDataType::Float3:	return GL_FLOAT;
 			case ShaderDataType::Float4:	return GL_FLOAT;
 			case ShaderDataType::Mat3:		return GL_FLOAT;
@@ -28,7 +29,7 @@ namespace Hazel {
 
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
-		glGenVertexArrays(1, &m_rendererID);
+		glCreateVertexArrays(1, &m_rendererID);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()
@@ -58,12 +59,14 @@ namespace Hazel {
 		for (const auto& element : layout)
 		{
 			glEnableVertexAttribArray(index);
-			glVertexAttribPointer(index,
+			glVertexAttribPointer(
+				index,
 				element.GetComponentCount(),
 				ShaderDataTypeToOpenGLBaseType(element.Type),
 				element.Normalized ? GL_TRUE : GL_FALSE,
 				layout.GetStride(),
-				(const void*)(intptr_t)element.Offset);
+				(const void*)(intptr_t)element.Offset
+			);
 			index++;
 		}
 

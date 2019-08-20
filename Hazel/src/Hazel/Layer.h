@@ -10,7 +10,7 @@ namespace Hazel {
 	{
 	public:
 		Layer(const std::string& debugName = "Layer");
-		virtual ~Layer();
+		virtual ~Layer() = default;
 
 		// Overriden in Sandbox APP
 		virtual void OnAttach() {}

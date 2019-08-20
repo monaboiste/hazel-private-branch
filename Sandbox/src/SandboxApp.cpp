@@ -38,10 +38,10 @@ public:
 		m_vertexArray->SetIndexBuffer(indexBuffer);
 
 		float squareVertices[] = {
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5f,  0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
 		m_squareVA.reset(Hazel::VertexArray::Create());
@@ -51,6 +51,7 @@ public:
 		squareVB->SetLayout(
 			{
 				{ Hazel::ShaderDataType::Float3, "a_position" },
+				{ Hazel::ShaderDataType::Float2, "a_texCoord" }
 			});
 		m_squareVA->AddVertexBuffer(squareVB);
 
@@ -130,19 +131,60 @@ public:
 		)";
 
 		m_flatColorShader.reset(Hazel::Shader::Create(flatColorVertexSource, flatColorFragmentSource));
+
+		std::string textureVertexSource = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_position;
+			layout(location = 1) in vec2 a_texCoord;
+			
+			uniform mat4 u_viewProjection;
+			uniform mat4 u_transform;
+			
+			out vec3 v_position;
+			out vec2 v_texCoord;
+			
+			void main()
+			{
+				v_position = a_position;
+				v_texCoord = a_texCoord;
+				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
+			}
+		)";
+
+		std::string textureFragmentSource = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			uniform sampler2D u_texture;
+
+			in vec3 v_position;
+			in vec2 v_texCoord;
+
+			void main()
+			{
+				color = texture(u_texture, v_texCoord);
+			}
+		)";
+
+		m_textureShader.reset(Hazel::Shader::Create(textureVertexSource, textureFragmentSource));
+		m_texture = Hazel::Texture2D::Create("assets/textures/awesomeface.png");
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->Bind();
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->UploadUniformInt("u_texture", 0);
 	}
 
 
-	void OnUpdate(Hazel::Timestep timestep) override
+	void OnUpdate(Hazel::Timestep dt) override
 	{
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-			m_cameraPosition.x += m_cameraMoveSpeed * timestep;
+			m_cameraPosition.x += m_cameraMoveSpeed * dt;
 		else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-			m_cameraPosition.x -= m_cameraMoveSpeed * timestep;
+			m_cameraPosition.x -= m_cameraMoveSpeed * dt;
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-			m_cameraPosition.y -= m_cameraMoveSpeed * timestep;
+			m_cameraPosition.y -= m_cameraMoveSpeed * dt;
 		else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-			m_cameraPosition.y += m_cameraMoveSpeed * timestep;
+			m_cameraPosition.y += m_cameraMoveSpeed * dt;
 
 		if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
 			m_CameraRotation -= m_cameraRotationSpeed;
@@ -156,6 +198,7 @@ public:
 		m_camera.SetPosition(m_cameraPosition);
 		m_camera.SetRotation(m_CameraRotation);
 
+		// ----------------------------------
 		Hazel::Renderer::BeginScene(m_camera);
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
@@ -163,6 +206,7 @@ public:
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_flatColorShader)->Bind();
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_flatColorShader)->UploadUniformFloat4("u_color", m_squareColor);
 		
+
 		for (int y = 0; y < 20; y++)
 		{
 			for (int x = 0; x < 20; x++)
@@ -173,9 +217,14 @@ public:
 			}
 		}
 
-		Hazel::Renderer::Submit(m_shader, m_vertexArray);
+		m_texture->Bind();
+		Hazel::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		// render triangle
+		// Hazel::Renderer::Submit(m_shader, m_vertexArray);
 
 		Hazel::Renderer::EndScene();
+		// ----------------------------------
 	}
 
 	void OnImGuiRender() override
@@ -197,6 +246,8 @@ private:
 	Hazel::Ref<Hazel::Shader> m_shader;
 	Hazel::Ref<Hazel::VertexArray> m_squareVA;
 	Hazel::Ref<Hazel::Shader> m_flatColorShader;
+	Hazel::Ref<Hazel::Shader> m_textureShader;
+	Hazel::Ref<Hazel::Texture2D> m_texture;
 
 	Hazel::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition;

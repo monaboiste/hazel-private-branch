@@ -58,9 +58,9 @@ namespace Hazel {
 		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event)
-			: m_event(event)
-		{
-		}
+			: m_event(event) {}
+
+		~EventDispatcher() = default;
 
 		template<typename T>
 		bool Dispatch(EventFn<T> func)

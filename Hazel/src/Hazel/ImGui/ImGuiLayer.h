@@ -11,7 +11,7 @@ namespace Hazel {
 	{
 	public:
 		ImGuiLayer();
-		~ImGuiLayer();
+		~ImGuiLayer() = default;
 
 		void virtual OnAttach() override;
 		void virtual OnDetach() override; 

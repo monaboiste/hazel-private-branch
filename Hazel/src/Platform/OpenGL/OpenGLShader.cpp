@@ -154,6 +154,9 @@ namespace Hazel {
 			return m_cacheUniformLocation[name];
 
 		GLint location = glGetUniformLocation(m_rendererID, name.c_str());
+		if (location == -1)
+			HZ_CORE_ERROR("Failed to retrieve {0} uniform location!", name);
+		
 		m_cacheUniformLocation[name] = location;
 
 		return location;
