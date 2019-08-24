@@ -4,13 +4,14 @@
 #include "Hazel\Events\ApplicationEvent.h"
 #include "Hazel\Events\KeyEvent.h"
 #include "Hazel\Events\MouseEvent.h"
+#include "ImGuiConsole.h"
 
 namespace Hazel {
 
 	class HAZEL_API ImGuiLayer : public Layer
 	{
 	public:
-		ImGuiLayer();
+		ImGuiLayer(bool showDemo = false, bool showConsole = true);
 		~ImGuiLayer() = default;
 
 		void virtual OnAttach() override;
@@ -21,6 +22,8 @@ namespace Hazel {
 		void End();
 	private:
 		float m_time = 0.0f;
+		bool m_showDemo;
+		bool m_showConsole;
 	};
 
 }

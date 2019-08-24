@@ -3,6 +3,7 @@
 #include "Core.h"
 #include "spdlog\spdlog.h"
 #include "spdlog\fmt\ostr.h"
+#include "ImGui\ImGuiConsole.h"
 
 namespace Hazel {
 

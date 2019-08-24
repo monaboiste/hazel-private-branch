@@ -16,10 +16,16 @@ Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	m_width = width;
 	m_height = height;
 
-	GLenum format = GL_RGB;
-	if (channels == 4)
-		format = GL_RGBA;
-
+	GLenum format = 0;
+	switch (channels)
+	{
+	case 1: format = GL_RED; break;
+	case 3: format = GL_RGB; break;
+	case 4: format = GL_RGBA; break;
+	}
+	if (format == 0)
+		HZ_CORE_ERROR("Texture format not supported!");
+	
 	glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererID);
 	glTextureStorage2D(m_rendererID, 1, GL_RGB8, m_width, m_height);
 

@@ -14,8 +14,8 @@
 
 namespace Hazel {
 
-	ImGuiLayer::ImGuiLayer()
-		: Layer("ImGuiLayer")
+	ImGuiLayer::ImGuiLayer(bool showDemo, bool showConsole)
+		: Layer("ImGuiLayer"), m_showDemo(showDemo), m_showConsole(showConsole)
 	{
 	}
 
@@ -84,8 +84,9 @@ namespace Hazel {
 
 	void ImGuiLayer::OnImGuiRender()
 	{
-		static bool show = true;
-		ImGui::ShowDemoWindow(&show);
+		if(m_showDemo)
+			ImGui::ShowDemoWindow(&m_showDemo);
+		ImGuiConsole::OnImGuiRender(&m_showConsole);
 	}
 
 }
