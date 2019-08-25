@@ -169,9 +169,12 @@ public:
 		)";
 
 		m_textureShader.reset(Hazel::Shader::Create(textureVertexSource, textureFragmentSource));
-		m_texture = Hazel::Texture2D::Create("assets/textures/awesomeface.png");
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->Bind();
+
+		m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->UploadUniformInt("u_texture", 0);
+
+		m_colorSplashTexture = Hazel::Texture2D::Create("assets/textures/color-splash.png");
 	}
 
 
@@ -217,7 +220,9 @@ public:
 			}
 		}
 
-		m_texture->Bind();
+		m_bricksTexture->Bind();
+		Hazel::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		m_colorSplashTexture->Bind();
 		Hazel::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		// render triangle
@@ -247,7 +252,8 @@ private:
 	Hazel::Ref<Hazel::VertexArray> m_squareVA;
 	Hazel::Ref<Hazel::Shader> m_flatColorShader;
 	Hazel::Ref<Hazel::Shader> m_textureShader;
-	Hazel::Ref<Hazel::Texture2D> m_texture;
+	Hazel::Ref<Hazel::Texture2D> m_bricksTexture;
+	Hazel::Ref<Hazel::Texture2D> m_colorSplashTexture;
 
 	Hazel::OrthographicCamera m_camera;
 	glm::vec3 m_cameraPosition;

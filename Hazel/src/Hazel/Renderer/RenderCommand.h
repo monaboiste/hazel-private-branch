@@ -7,6 +7,11 @@ namespace Hazel {
 	class RenderCommand
 	{
 	public:
+		static void Init()
+		{
+			ms_RendererAPI->Init();
+		}
+
 		inline static void Clear()
 		{
 			ms_RendererAPI->Clear();
