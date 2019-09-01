@@ -13,6 +13,7 @@ namespace Hazel {
 		virtual void Unbind() const = 0;
 
 		static Shader* Create(const std::string& vetexSource, const std::string& fragmentSource);
+		static Shader* Create(const std::string& filepath);
 	};
 
 }

@@ -132,43 +132,8 @@ public:
 
 		m_flatColorShader.reset(Hazel::Shader::Create(flatColorVertexSource, flatColorFragmentSource));
 
-		std::string textureVertexSource = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_position;
-			layout(location = 1) in vec2 a_texCoord;
-			
-			uniform mat4 u_viewProjection;
-			uniform mat4 u_transform;
-			
-			out vec3 v_position;
-			out vec2 v_texCoord;
-			
-			void main()
-			{
-				v_position = a_position;
-				v_texCoord = a_texCoord;
-				gl_Position = u_viewProjection * u_transform * vec4(a_position, 1.0);	
-			}
-		)";
 
-		std::string textureFragmentSource = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform sampler2D u_texture;
-
-			in vec3 v_position;
-			in vec2 v_texCoord;
-
-			void main()
-			{
-				color = texture(u_texture, v_texCoord);
-			}
-		)";
-
-		m_textureShader.reset(Hazel::Shader::Create(textureVertexSource, textureFragmentSource));
+		m_textureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
 		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->Bind();
 
 		m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");

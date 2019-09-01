@@ -54,20 +54,19 @@ namespace Hazel {
 
 	class EventDispatcher
 	{
-		template<typename T>
-		using EventFn = std::function<bool(T&)>;
 	public:
 		EventDispatcher(Event& event)
 			: m_event(event) {}
 
 		~EventDispatcher() = default;
 
-		template<typename T>
-		bool Dispatch(EventFn<T> func)
+		// F will be deduced by the compiler
+		template<typename T, typename F>
+		bool Dispatch(const F& func)
 		{
 			if (m_event.GetEventType() == T::GetStaticType())
 			{
-				m_event.handled = func(*(T*)&m_event);
+				m_event.handled = func(static_cast<T&>(m_event));
 				return true;
 			}
 			return false;
