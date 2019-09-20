@@ -10,7 +10,7 @@ class ExampleLayer : public Hazel::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_camera(-1.6f, 1.6f, -0.9f, 0.9f), m_cameraPosition(0.0f, 0.0f, 0.0f)
+		: Layer("Example"), m_cameraController(1280.0f / 720.0f, true)
 	{
 		m_vertexArray.reset(Hazel::VertexArray::Create());
 
@@ -97,7 +97,7 @@ public:
 			}
 		)";
 
-		m_shader.reset(Hazel::Shader::Create(vertexSource, fragmentSource));
+		m_shader = Hazel::Shader::Create("VertexPosColor", vertexSource, fragmentSource);
 
 		std::string flatColorVertexSource = R"(
 			#version 330 core
@@ -130,44 +130,29 @@ public:
 			}
 		)";
 
-		m_flatColorShader.reset(Hazel::Shader::Create(flatColorVertexSource, flatColorFragmentSource));
+		m_flatColorShader = Hazel::Shader::Create("FlatColor", flatColorVertexSource, flatColorFragmentSource);
 
 
-		m_textureShader.reset(Hazel::Shader::Create("assets/shaders/Texture.glsl"));
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->Bind();
+		auto textureShader = m_shaderLibrary.Load("assets/shaders/Texture.glsl");
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
 
 		m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_textureShader)->UploadUniformInt("u_texture", 0);
+		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_texture", 0);
 
 		m_colorSplashTexture = Hazel::Texture2D::Create("assets/textures/color-splash.png");
 	}
 
 
-	void OnUpdate(Hazel::Timestep dt) override
+	void OnUpdate(Hazel::Timestep ts) override
 	{
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_LEFT))
-			m_cameraPosition.x += m_cameraMoveSpeed * dt;
-		else if (Hazel::Input::IsKeyPressed(HZ_KEY_RIGHT))
-			m_cameraPosition.x -= m_cameraMoveSpeed * dt;
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_UP))
-			m_cameraPosition.y -= m_cameraMoveSpeed * dt;
-		else if (Hazel::Input::IsKeyPressed(HZ_KEY_DOWN))
-			m_cameraPosition.y += m_cameraMoveSpeed * dt;
-
-		if (Hazel::Input::IsKeyPressed(HZ_KEY_A))
-			m_CameraRotation -= m_cameraRotationSpeed;
-		else if (Hazel::Input::IsKeyPressed(HZ_KEY_D))
-			m_CameraRotation += m_cameraRotationSpeed;
-
+		m_cameraController.OnUpdate(ts);
 
 		Hazel::RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		Hazel::RenderCommand::Clear();
 
-		m_camera.SetPosition(m_cameraPosition);
-		m_camera.SetRotation(m_CameraRotation);
 
 		// ----------------------------------
-		Hazel::Renderer::BeginScene(m_camera);
+		Hazel::Renderer::BeginScene(m_cameraController.GetCamera());
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
@@ -185,10 +170,12 @@ public:
 			}
 		}
 
+		auto textureShader = m_shaderLibrary.Get("Texture");
+
 		m_bricksTexture->Bind();
-		Hazel::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 		m_colorSplashTexture->Bind();
-		Hazel::Renderer::Submit(m_textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		Hazel::Renderer::Submit(textureShader, m_squareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		// render triangle
 		// Hazel::Renderer::Submit(m_shader, m_vertexArray);
@@ -206,25 +193,21 @@ public:
 		ImGui::End();
 	}
 
-	void OnEvent(Hazel::Event& event) override
+	void OnEvent(Hazel::Event& e) override
 	{
-		
+		m_cameraController.OnEvent(e);
 	}
 	
 private:
+	Hazel::ShaderLibrary m_shaderLibrary;
 	Hazel::Ref<Hazel::VertexArray> m_vertexArray;
 	Hazel::Ref<Hazel::Shader> m_shader;
 	Hazel::Ref<Hazel::VertexArray> m_squareVA;
 	Hazel::Ref<Hazel::Shader> m_flatColorShader;
-	Hazel::Ref<Hazel::Shader> m_textureShader;
 	Hazel::Ref<Hazel::Texture2D> m_bricksTexture;
 	Hazel::Ref<Hazel::Texture2D> m_colorSplashTexture;
 
-	Hazel::OrthographicCamera m_camera;
-	glm::vec3 m_cameraPosition;
-	float m_cameraMoveSpeed = 0.5f;
-	float m_CameraRotation = 0.0f;
-	float m_cameraRotationSpeed = 2.0f;
+	Hazel::OrthographicCameraController m_cameraController;
 
 	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 };

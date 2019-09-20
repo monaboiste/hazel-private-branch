@@ -42,7 +42,7 @@ namespace Hazel {
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
 		{
 			(*--it)->OnEvent(e);
-			if (e.handled)
+			if (e.Handled)
 				break;
 		}
 	}
