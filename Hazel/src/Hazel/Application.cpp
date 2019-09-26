@@ -24,7 +24,7 @@ namespace Hazel {
 		Renderer::Init();
 
 		m_imguiLayer = new ImGuiLayer(false, true);
-		PushOverlay(m_imguiLayer);	
+		PushOverlay(m_imguiLayer);
 	}
 
 
@@ -36,8 +36,7 @@ namespace Hazel {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-
-		HZ_CORE_TRACE("{0}", e);
+		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
 
 		for (auto it = m_layerStack.end(); it != m_layerStack.begin(); )
 		{
@@ -67,14 +66,17 @@ namespace Hazel {
 			Timestep timestep = time - m_lastFrameTime;
 			m_lastFrameTime = time;
 
-			for (Layer* layer : m_layerStack)
-				layer->OnUpdate(timestep);
+			if (!m_minimized)
+			{
+				for (Layer* layer : m_layerStack)
+					layer->OnUpdate(timestep);
+			}
 
 			m_imguiLayer->Begin();
 			for (Layer* layer : m_layerStack)
 				layer->OnImGuiRender();
 			m_imguiLayer->End();
-						
+
 			m_window->OnUpdate();
 		}
 	}
@@ -84,6 +86,20 @@ namespace Hazel {
 	{
 		m_running = false;
 		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		if (e.GetWidth() == 0 || e.GetHeight() == 0)
+		{
+			m_minimized = true;
+			return false;
+		}
+		m_minimized = false;
+
+		Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+
+		return false;
 	}
 
 }

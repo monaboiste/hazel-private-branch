@@ -12,6 +12,12 @@ namespace Hazel {
 			::Init();
 	}
 
+	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+	{
+		/* @TODO: Rework this for multiple framebuffers */
+		RenderCommand::SetViewport(0, 0, width, height);
+	}
+
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
 		ms_sceneData->viewProjectionMatrix = camera.GetViewProjectionMatrix();

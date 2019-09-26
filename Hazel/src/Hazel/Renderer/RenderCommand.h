@@ -27,6 +27,10 @@ namespace Hazel {
 			ms_RendererAPI->DrawIndexed(vertexArray);
 		}
 
+		inline static void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
+		{
+			ms_RendererAPI->SetViewport(x, y, width, height);
+		}
 	private:
 		static RendererAPI* ms_RendererAPI;
 	};

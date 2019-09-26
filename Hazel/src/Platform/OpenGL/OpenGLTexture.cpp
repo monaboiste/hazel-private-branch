@@ -20,9 +20,9 @@ Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	GLenum dataFormat = 0;
 	switch (channels)
 	{
-	case 1: internalFormat = GL_R8; dataFormat = GL_RED; break;
-	case 3: internalFormat = GL_RGB8; dataFormat = GL_RGB; break;
-	case 4: internalFormat = GL_RGBA8; dataFormat = GL_RGBA; break;
+	case 1: internalFormat = GL_R8;		dataFormat = GL_RED;  break;
+	case 3: internalFormat = GL_RGB8;	dataFormat = GL_RGB;  break;
+	case 4: internalFormat = GL_RGBA8;	dataFormat = GL_RGBA; break;
 	}
 	HZ_CORE_ASSERT(internalFormat & dataFormat, "Texture format not supported!");
 	

@@ -27,9 +27,11 @@ namespace Hazel {
 		static inline Application& Get() { return *ms_instance; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 	private:
 		static Application* ms_instance;
 		bool m_running = true;
+		bool m_minimized = false;
 		std::unique_ptr<Window> m_window;
 		LayerStack m_layerStack;
 		ImGuiLayer* m_imguiLayer;	
