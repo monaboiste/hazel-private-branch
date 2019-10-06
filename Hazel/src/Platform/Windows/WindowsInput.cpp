@@ -1,12 +1,13 @@
 #include "hzpch.h"
 #include "WindowsInput.h"
 
+#include "Hazel\Core\Application.h"
+
 #include <GLFW\glfw3.h>
-#include "Hazel\Application.h"
 
 namespace Hazel {
 
-	Input* Input::ms_instance = new WindowsInput();
+	Scope<Input> Input::ms_instance = CreateScope<WindowsInput>();
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode)
 	{

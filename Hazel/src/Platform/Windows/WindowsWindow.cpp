@@ -5,7 +5,7 @@
 #include "Hazel\Events\ApplicationEvent.h"
 #include "Hazel\Events\KeyEvent.h"
 #include "Hazel\Events\MouseEvent.h"
-#include "Hazel\Log.h"
+#include "Hazel\Core\Log.h"
 
 #include "Platform\OpenGL\OpenGLContext.h"
 
@@ -56,7 +56,7 @@ namespace Hazel {
 
 		m_window = glfwCreateWindow((int)props.screenWidth, (int)props.screenHeight, m_data.title.c_str(), nullptr, nullptr);
 		
-		m_context = new OpenGLContext(m_window);
+		m_context = CreateScope<OpenGLContext>(m_window);
 		m_context->Init();
 		
 		glfwSetWindowUserPointer(m_window, &m_data);

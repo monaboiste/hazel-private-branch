@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core.h"
+#include "Hazel\ImGui\ImGuiConsole.h"
+
 #include "spdlog\spdlog.h"
 #include "spdlog\fmt\ostr.h"
-#include "ImGui\ImGuiConsole.h"
 
 namespace Hazel {
 
-	class HAZEL_API Log
+	class Log
 	{
 	public:
 		static void Init();

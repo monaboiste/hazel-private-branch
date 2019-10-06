@@ -1,12 +1,10 @@
 #include "hzpch.h"
-#include "imgui.h"
-
-#include "ImGuiBuild.h"
-
 #include "ImGuiLayer.h"
 
-#include "Hazel\Application.h"
-#include "Hazel\Core.h"
+#include "imgui.h"
+
+#include "Hazel\ImGui\ImGuiBuild.h"
+#include "Hazel\Core\Application.h"
 
 // TEMPORARY
 #include <GLFW\glfw3.h>	

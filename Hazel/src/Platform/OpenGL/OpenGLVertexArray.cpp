@@ -2,6 +2,7 @@
 #include "OpenGLVertexArray.h"
 
 #include "Hazel\Renderer\Buffer.h"
+
 #include <glad\glad.h>
 
 namespace Hazel {

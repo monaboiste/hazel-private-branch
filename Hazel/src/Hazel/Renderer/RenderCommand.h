@@ -1,6 +1,6 @@
 #pragma once
 
-#include "RendererAPI.h"
+#include "Hazel\Renderer\RendererAPI.h"
 
 namespace Hazel {
 
@@ -32,7 +32,7 @@ namespace Hazel {
 			ms_RendererAPI->SetViewport(x, y, width, height);
 		}
 	private:
-		static RendererAPI* ms_RendererAPI;
+		static Scope<RendererAPI> ms_RendererAPI;
 	};
 
 }

@@ -2,8 +2,7 @@
 
 #include "hzpch.h"
 
-#include "Core.h"
-#include "Events\Event.h"
+#include "Hazel\Events\Event.h"
 
 namespace Hazel {
 
@@ -18,7 +17,7 @@ namespace Hazel {
 	};
 
 	// Interface representing a desktop system based Window
-	class HAZEL_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;

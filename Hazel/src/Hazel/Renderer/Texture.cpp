@@ -1,6 +1,7 @@
 #include "hzpch.h"
 #include "Texture.h"
-#include "Renderer.h"
+
+#include "Hazel\Renderer\Renderer.h"
 #include "Platform\OpenGL\OpenGLTexture.h"
 
 namespace Hazel {

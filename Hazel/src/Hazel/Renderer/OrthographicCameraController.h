@@ -4,6 +4,7 @@
 #include "Hazel\Core\Timestep.h"
 #include "Hazel\Events\ApplicationEvent.h"
 #include "Hazel\Events\MouseEvent.h"
+
 #include <glm\glm.hpp>
 
 
@@ -31,7 +32,7 @@ namespace Hazel {
 		float m_zoomLevel = 1.0f;
 		glm::vec3 m_cameraPosition = { 0.0f, 0.0f, 0.0f };
 		OrthographicCamera m_camera;
-		float m_cameraRotation = 0.0f;
+		float m_cameraRotation = 0.0f; /* In degrees, in the anti-clockwise direction */
 		float m_cameraTranslationSpeed = 1.0f;
 		float m_cameraRotationSpeed = 100.0f;
 	};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Hazel\Renderer\Texture.h"
+
 #include <string>
 #include <cstdint>
 

@@ -1,6 +1,8 @@
 #include "hzpch.h"
 #include "Log.h"
-#include "ImGui\ImGuiConsoleSink.h"
+
+#include "Hazel\ImGui\ImGuiConsoleSink.h"
+
 #include "spdlog\sinks\stdout_color_sinks.h"
 
 namespace Hazel {

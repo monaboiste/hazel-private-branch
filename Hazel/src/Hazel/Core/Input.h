@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Hazel\Core.h"
+#include "Hazel\Core\Core.h"
 
 namespace Hazel {
 
-	class HAZEL_API Input
+	class Input
 	{
 	protected:
 		Input() = default;
@@ -26,7 +26,7 @@ namespace Hazel {
 		virtual float GetMouseXImpl() = 0;
 		virtual float GetMouseYImpl() = 0;
 	private:
-		static Input* ms_instance;
+		static Scope<Input> ms_instance;
 	};
 
 }

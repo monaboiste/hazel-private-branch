@@ -13,7 +13,7 @@ namespace Hazel {
 	uint16_t ImGuiConsole::ms_messageBufferSize = 0;
 	uint16_t ImGuiConsole::ms_messageBufferBegin = 0;
 	ImGuiConsole::Message::Level ImGuiConsole::ms_messageBufferRenderFilter = ImGuiConsole::Message::Level::Trace;
-	std::vector < Ref<ImGuiConsole::Message>> ImGuiConsole::ms_messageBuffer(ms_messageBufferCapacity);
+	std::vector<Ref<ImGuiConsole::Message>> ImGuiConsole::ms_messageBuffer(ms_messageBufferCapacity);
 	bool ImGuiConsole::ms_allowScrollingToBottom = true;
 	bool ImGuiConsole::ms_requestScrollToBottom = false;
 

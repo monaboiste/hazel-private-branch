@@ -1,15 +1,15 @@
 #include "hzpch.h"
 #include "Renderer.h"
+
 #include "Platform/OpenGL/OpenGLShader.h"
 
 namespace Hazel {
 	
-	Renderer::SceneData* Renderer::ms_sceneData = new Renderer::SceneData;
+	Scope<Renderer::SceneData> Renderer::ms_sceneData = CreateScope<Renderer::SceneData>();
 
 	void Renderer::Init()
 	{
-		RenderCommand
-			::Init();
+		RenderCommand::Init();
 	}
 
 	void Renderer::OnWindowResize(uint32_t width, uint32_t height)
