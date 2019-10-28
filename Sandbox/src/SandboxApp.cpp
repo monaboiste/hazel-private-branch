@@ -5,8 +5,6 @@
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
-#include "Platform\OpenGL\OpenGLShader.h"
-
 #include "Sandbox2D.h"
 
 class ExampleLayer : public Hazel::Layer
@@ -137,10 +135,10 @@ public:
 
 
 		auto textureShader = m_shaderLibrary.Load("assets/shaders/Texture.glsl");
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->Bind();
+		textureShader->Bind();
 
 		m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(textureShader)->UploadUniformInt("u_texture", 0);
+		textureShader->SetInt("u_texture", 0);
 
 		m_colorSplashTexture = Hazel::Texture2D::Create("assets/textures/color-splash.png");
 	}
@@ -159,8 +157,8 @@ public:
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_flatColorShader)->Bind();
-		std::dynamic_pointer_cast<Hazel::OpenGLShader>(m_flatColorShader)->UploadUniformFloat4("u_color", m_squareColor);
+		m_flatColorShader->Bind();
+		m_flatColorShader->SetFloat4("u_color", m_squareColor);
 		
 
 		for (int y = 0; y < 20; y++)

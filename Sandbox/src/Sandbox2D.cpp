@@ -38,7 +38,9 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	/* @TODO Add Shader::SetMat4, Shader::SetFloat4 */
 
 
+	Hazel::Renderer2D::DrawQuad({ 0.5f, 0.8f }, { 1.0f, 0.8f }, { 0.1f, 0.2f, 0.3f, 1.0f });
 	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+	Hazel::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.5f, 0.6f, 0.3f, 1.0f });
 
 	Hazel::Renderer2D::EndScene();
 	// ----------------------------------
