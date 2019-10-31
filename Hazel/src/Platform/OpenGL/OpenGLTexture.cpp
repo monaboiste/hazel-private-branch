@@ -33,6 +33,8 @@ Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 
 	glTextureParameteri(m_rendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTextureParameteri(m_rendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTextureParameteri(m_rendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 	glTextureSubImage2D(m_rendererID, 0, 0, 0, m_width, m_height, dataFormat, GL_UNSIGNED_BYTE, data);
 

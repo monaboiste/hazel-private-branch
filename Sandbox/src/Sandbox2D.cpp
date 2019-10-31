@@ -14,7 +14,7 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
-	
+	m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 }
 
 void Sandbox2D::OnDetach()
@@ -29,18 +29,14 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	Hazel::RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 	Hazel::RenderCommand::Clear();
 
-
 	// ----------------------------------
 	Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
 	static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-	/* @TODO Add Shader::SetMat4, Shader::SetFloat4 */
-
-
-	Hazel::Renderer2D::DrawQuad({ 0.5f, 0.8f }, { 1.0f, 0.8f }, { 0.1f, 0.2f, 0.3f, 1.0f });
+	Hazel::Renderer2D::DrawQuad({ 0.5f, 0.8f }, { 1.0f, 0.8f }, m_squareColor );
 	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-	Hazel::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.5f, 0.6f, 0.3f, 1.0f });
+	Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 1.8f, 2.2f }, m_bricksTexture);
 
 	Hazel::Renderer2D::EndScene();
 	// ----------------------------------
