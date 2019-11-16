@@ -25,3 +25,6 @@
 #include "Hazel\Renderer\VertexArray.h"
 
 #include "Hazel\Renderer\OrthographicCamera.h"
+
+// ---ImGui Console-------------------
+#include "Hazel\ImGui\ImGuiConsole.h"

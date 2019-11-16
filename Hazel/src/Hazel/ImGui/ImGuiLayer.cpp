@@ -12,8 +12,8 @@
 
 namespace Hazel {
 
-	ImGuiLayer::ImGuiLayer(bool showDemo, bool showConsole)
-		: Layer("ImGuiLayer"), m_showDemo(showDemo), m_showConsole(showConsole)
+	ImGuiLayer::ImGuiLayer()
+		: Layer("ImGuiLayer")
 	{
 	}
 
@@ -79,12 +79,4 @@ namespace Hazel {
 			glfwMakeContextCurrent(backup_current_context);
 		}
 	}
-
-	void ImGuiLayer::OnImGuiRender()
-	{
-		if(m_showDemo)
-			ImGui::ShowDemoWindow(&m_showDemo);
-		ImGuiConsole::OnImGuiRender(&m_showConsole);
-	}
-
 }

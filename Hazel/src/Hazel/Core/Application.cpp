@@ -23,7 +23,7 @@ namespace Hazel {
 
 		Renderer::Init();
 
-		m_imguiLayer = new ImGuiLayer(false, true);
+		m_imguiLayer = new ImGuiLayer();
 		PushOverlay(m_imguiLayer);
 	}
 
