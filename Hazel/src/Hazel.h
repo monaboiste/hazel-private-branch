@@ -26,5 +26,6 @@
 
 #include "Hazel\Renderer\OrthographicCamera.h"
 
-// ---ImGui Console-------------------
+// ---ImGui Console and Debug----------
 #include "Hazel\ImGui\ImGuiConsole.h"
+#include "Hazel\Debug\Instrumentor.h"

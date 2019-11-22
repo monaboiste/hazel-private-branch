@@ -1,8 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLContext.h"
 
-#include "Hazel\Core\Log.h"
-
 #include <GLFW\glfw3.h>
 #include <glad\glad.h>
 

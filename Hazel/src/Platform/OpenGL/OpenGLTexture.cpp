@@ -1,8 +1,6 @@
 #include "hzpch.h"
 #include "OpenGLTexture.h"
 
-#include "Hazel\Core\Log.h"
-
 #include "stb_image.h"
 
 Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)

@@ -1,7 +1,6 @@
 #include "hzpch.h"
 #include "Application.h"
 
-#include "Hazel\Core\Log.h"
 #include "Hazel\Core\Input.h"
 #include "Hazel\Renderer\Renderer.h"
 
