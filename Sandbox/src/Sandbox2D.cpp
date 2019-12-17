@@ -14,11 +14,15 @@ Sandbox2D::Sandbox2D()
 
 void Sandbox2D::OnAttach()
 {
+	HZ_PROFILE_FUNCTION();
+
 	m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 }
 
 void Sandbox2D::OnDetach()
 {
+	HZ_PROFILE_FUNCTION();
+
 }
 
 
@@ -27,16 +31,16 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	HZ_PROFILE_FUNCTION();
 
 	{
-		HZ_PROFILE_SCOPE("CameraController::OnUpdate");
 		m_cameraController.OnUpdate(ts);
 	}
+
 	{
 		HZ_PROFILE_SCOPE("Renderer Prep");
 		Hazel::RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		Hazel::RenderCommand::Clear();
 	}
+
 	{
-		
 		HZ_PROFILE_SCOPE("Renderer Draw");
 		Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
@@ -52,6 +56,8 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 
 void Sandbox2D::OnImGuiRender()
 {
+	HZ_PROFILE_FUNCTION();
+
 	bool showConsole = true;
 	Hazel::ImGuiConsole::OnImGuiRender(&showConsole);
 	ImGui::Begin("Settings");

@@ -6,6 +6,8 @@
 Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	: m_path(path)
 {
+	HZ_PROFILE_FUNCTION();
+
 	stbi_set_flip_vertically_on_load(1);
 
 	int width, height, channels;
@@ -45,6 +47,8 @@ Hazel::OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 Hazel::OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height)
 	: m_width(width), m_height(height)
 {
+	HZ_PROFILE_FUNCTION();
+
 	m_internalFormat = GL_RGBA8;
 	m_dataFormat = GL_RGBA;
 
@@ -71,5 +75,14 @@ void Hazel::OpenGLTexture2D::SetData(void* data, uint32_t size)
 
 void Hazel::OpenGLTexture2D::Bind(uint32_t slot) const
 {
+	HZ_PROFILE_FUNCTION();
+
 	glBindTextureUnit(slot, m_rendererID);
+}
+
+void Hazel::OpenGLTexture2D::Unbind() const
+{
+	HZ_PROFILE_FUNCTION();
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

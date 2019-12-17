@@ -22,6 +22,7 @@ namespace Hazel {
 		virtual void SetData(void* data, uint32_t size) override;
 
 		virtual void Bind(uint32_t slot = 0) const override;
+		virtual void Unbind() const override;
 	private:
 		uint32_t m_rendererID;
 		uint32_t m_width, m_height;
