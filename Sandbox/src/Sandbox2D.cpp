@@ -46,9 +46,9 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		Hazel::Renderer2D::DrawQuad({ 0.5f, 0.8f }, { 1.0f, 0.8f }, m_squareColor);
+		Hazel::Renderer2D::DrawRotatedQuad({ 0.5f, 0.8f }, { 1.0f, 0.8f }, glm::radians(45.0f), m_squareColor);
 		Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 1.8f, 2.2f }, m_bricksTexture);
+		Hazel::Renderer2D::DrawRotatedQuad({ 0.0f, 0.0f, -0.1f }, { 1.8f, 2.2f }, glm::radians(45.0f), m_bricksTexture, 10.0f, glm::vec4(0.0f, 0.8f, 0.0f, 1.0f));
 
 		Hazel::Renderer2D::EndScene();
 	}

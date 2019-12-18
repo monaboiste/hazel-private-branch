@@ -50,7 +50,7 @@ namespace Hazel {
 		uint32_t whiteTextureData = 0xffffffff;
 		s_data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-		s_data->QuadShader = Shader::Create("assets/shaders/Basic.glsl");
+		s_data->QuadShader = Shader::Create("assets/shaders/Texture.glsl");
 		s_data->QuadShader->Bind();
 		s_data->QuadShader->SetInt("u_texture", 0);
 	}
@@ -84,33 +84,82 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		s_data->QuadShader->SetFloat("u_tilingFactor", 1.0f);
 		s_data->QuadShader->SetFloat4("u_color", color);
 		s_data->WhiteTexture->Bind();
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * /* rotation */ glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_data->QuadShader->SetMat4("u_transform", transform);
 
 		s_data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_data->QuadVertexArray);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture) 
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
-		DrawQuad({ position.x, position.y, 0.0f }, size, texture);
+		DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor, tintColor);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		HZ_PROFILE_FUNCTION();
 
-		s_data->QuadShader->SetFloat4("u_color", glm::vec4(1.0f));
+		s_data->QuadShader->SetFloat("u_tilingFactor", tilingFactor);
+		s_data->QuadShader->SetFloat4("u_color", tintColor);
 		texture->Bind();
 
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * /* rotation */ glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 		s_data->QuadShader->SetMat4("u_transform", transform);
 
 		s_data->QuadVertexArray->Bind();
 		RenderCommand::DrawIndexed(s_data->QuadVertexArray);
 	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, color);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const glm::vec4& color)
+	{
+		HZ_PROFILE_FUNCTION();
+
+		s_data->QuadShader->SetFloat("u_tilingFactor", 1.0f);
+		s_data->QuadShader->SetFloat4("u_color", color);
+		s_data->WhiteTexture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }
+		);
+		s_data->QuadShader->SetMat4("u_transform", transform);
+
+		s_data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_data->QuadVertexArray);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		DrawRotatedQuad({ position.x, position.y, 0.0f }, size, rotation, texture, tilingFactor, tintColor);
+	}
+
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
+	{
+		HZ_PROFILE_FUNCTION();
+
+		s_data->QuadShader->SetFloat("u_tilingFactor", tilingFactor);
+		s_data->QuadShader->SetFloat4("u_color", tintColor);
+		texture->Bind();
+
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }
+		);
+		s_data->QuadShader->SetMat4("u_transform", transform);
+
+		s_data->QuadVertexArray->Bind();
+		RenderCommand::DrawIndexed(s_data->QuadVertexArray);
+	}
+
 }
 
