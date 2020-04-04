@@ -22,10 +22,11 @@ void Hazel::OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
 	glClearColor(color.r, color.g, color.b, color.a);
 }
 
-void Hazel::OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
+void Hazel::OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray, uint32_t indexCount)
 {
-	glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffers()->GetCount(), GL_UNSIGNED_INT, nullptr);
-	//glBindTexture(GL_TEXTURE_2D, 0);
+	uint32_t count = indexCount == 0 ? vertexArray->GetIndexBuffers()->GetCount() : indexCount;
+	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Hazel::OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)
