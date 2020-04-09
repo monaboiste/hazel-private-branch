@@ -40,6 +40,8 @@ namespace Hazel {
 		Ref<VertexBuffer>		QuadVertexBuffer;
 		Ref<Shader>				QuadShader;
 		Ref<Texture2D>			WhiteTexture;
+
+		glm::vec4 QuadVertexPositions[4];
 	};
 
 	static Renderer2DData s_data;
@@ -100,6 +102,11 @@ namespace Hazel {
 
 		// Set index slot 0 to white texture
 		s_data.TexSlots[0] = s_data.WhiteTexture;
+
+		s_data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
+		s_data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
+		s_data.QuadVertexPositions[2] = {  0.5f,  0.5f, 0.0f, 1.0f };
+		s_data.QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
 	}
 
 	void Renderer2D::Shutdown()
@@ -153,29 +160,32 @@ namespace Hazel {
 		const float texIndex = 0.0f; // white texture
 		const float tilingFactor = 1.0f;
 
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
 		// bottom left
-		s_data.QuadVertexBufferPtr->Position = position;
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[0];
 		s_data.QuadVertexBufferPtr->Color = color;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// bottom right
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x + size.x, position.y, 0.0f);
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[1];
 		s_data.QuadVertexBufferPtr->Color = color;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// top right
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x + size.x, position.y + size.y, 0.0f);
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[2];
 		s_data.QuadVertexBufferPtr->Color = color;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// top left
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x, position.y + size.y, 0.0f);
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[3];
 		s_data.QuadVertexBufferPtr->Color = color;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
@@ -183,16 +193,6 @@ namespace Hazel {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
-#if 0
-		s_data.QuadShader->SetFloat("u_tilingFactor", 1.0f);
-		s_data.WhiteTexture->Bind();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_data.QuadShader->SetMat4("u_transform", transform);
-
-		s_data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_data.QuadVertexArray);
-#endif
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
@@ -203,8 +203,6 @@ namespace Hazel {
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		HZ_PROFILE_FUNCTION();
-
-		constexpr glm::vec4 color(1.0f, 1.0f, 1.0f, 1.0f);
 
 		float texIndex = 0.0f;
 
@@ -224,47 +222,39 @@ namespace Hazel {
 			s_data.TexSlotIndex++;
 		}
 
+		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
+
 		// bottom left
-		s_data.QuadVertexBufferPtr->Position = position;
-		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// bottom right
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x + size.x, position.y, 0.0f);
-		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// top right
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x + size.x, position.y + size.y, 0.0f);
-		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 		// top left
-		s_data.QuadVertexBufferPtr->Position = glm::vec3(position.x, position.y + size.y, 0.0f);
-		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
 		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
 		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
 		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
-#if 0
-		s_data.QuadShader->SetFloat("u_tilingFactor", tilingFactor);
-		s_data.QuadShader->SetFloat4("u_color", tintColor);
-		texture->Bind();
-
-		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-		s_data.QuadShader->SetMat4("u_transform", transform);
-
-		s_data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_data.QuadVertexArray);
-#endif
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -276,18 +266,43 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		s_data.QuadShader->SetFloat("u_tilingFactor", 1.0f);
-		s_data.QuadShader->SetFloat4("u_color", color);
-		s_data.WhiteTexture->Bind();
+		const float texIndex = 0.0f; // white texture
+		const float tilingFactor = 1.0f;
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }
-		);
-		s_data.QuadShader->SetMat4("u_transform", transform);
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
-		s_data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_data.QuadVertexArray);
+		// bottom left
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// bottom right
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// top right
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// top left
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->Color = color;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+
+		s_data.QuadIndexCount += 6;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
@@ -299,18 +314,58 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		s_data.QuadShader->SetFloat("u_tilingFactor", tilingFactor);
-		s_data.QuadShader->SetFloat4("u_color", tintColor);
-		texture->Bind();
+		float texIndex = 0.0f;
+
+		for (uint32_t i = 1; i < s_data.TexSlotIndex; i++)
+		{
+			if (*s_data.TexSlots[i].get() == *texture.get())
+			{
+				texIndex = (float)i;
+				break;
+			}
+		}
+
+		if (texIndex == 0.0f)
+		{
+			texIndex = (float)s_data.TexSlotIndex;
+			s_data.TexSlots[s_data.TexSlotIndex] = texture;
+			s_data.TexSlotIndex++;
+		}
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
-			* glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f }
-		);
-		s_data.QuadShader->SetMat4("u_transform", transform);
+			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
-		s_data.QuadVertexArray->Bind();
-		RenderCommand::DrawIndexed(s_data.QuadVertexArray);
+		// bottom left
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[0];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 0.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// bottom right
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[1];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 0.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// top right
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[2];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(1.0f, 1.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+		// top left
+		s_data.QuadVertexBufferPtr->Position = transform * s_data.QuadVertexPositions[3];
+		s_data.QuadVertexBufferPtr->Color = tintColor;
+		s_data.QuadVertexBufferPtr->TexCoord = glm::vec2(0.0f, 1.0f);
+		s_data.QuadVertexBufferPtr->TexIndex = texIndex;
+		s_data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
+		s_data.QuadVertexBufferPtr++;
+
+		s_data.QuadIndexCount += 6;
 	}
 
 }
