@@ -23,9 +23,9 @@ namespace Hazel {
 
 	struct Renderer2DData
 	{
-		const uint32_t			MaxQuads = 10000;
-		const uint32_t			MaxVertices = MaxQuads * 4;
-		const uint32_t			MaxIndices = MaxQuads * 6;
+		static const uint32_t	MaxQuads = 10000;
+		static const uint32_t	MaxVertices = MaxQuads * 4;
+		static const uint32_t	MaxIndices = MaxQuads * 6;
 		static const uint32_t	MaxTexSlots = 32;		/* @TODO: RenderCaps */
 
 		uint32_t				QuadIndexCount = 0;
@@ -42,6 +42,8 @@ namespace Hazel {
 		Ref<Texture2D>			WhiteTexture;
 
 		glm::vec4 QuadVertexPositions[4];
+
+		Renderer2D::Statistics Stats;
 	};
 
 	static Renderer2DData s_data;
@@ -146,6 +148,18 @@ namespace Hazel {
 			s_data.TexSlots[i]->Bind(i);
 
 		RenderCommand::DrawIndexed(s_data.QuadVertexArray, s_data.QuadIndexCount);
+		
+		s_data.Stats.DrawCalls++;
+	}
+
+	void Renderer2D::FlushAndReset()
+	{
+		EndScene();
+
+		s_data.QuadIndexCount = 0;
+		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+
+		s_data.TexSlotIndex = 1;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
@@ -157,6 +171,9 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		if (s_data.QuadIndexCount >= s_data.MaxIndices)
+			FlushAndReset();
+
 		const float texIndex = 0.0f; // white texture
 		const float tilingFactor = 1.0f;
 
@@ -193,6 +210,8 @@ namespace Hazel {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
+
+		s_data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
@@ -204,6 +223,9 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		if (s_data.QuadIndexCount >= s_data.MaxIndices)
+			FlushAndReset();
+
 		float texIndex = 0.0f;
 
 		for (uint32_t i = 1; i < s_data.TexSlotIndex; i++)
@@ -255,6 +277,8 @@ namespace Hazel {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
+
+		s_data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color)
@@ -266,11 +290,14 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		if (s_data.QuadIndexCount >= s_data.MaxIndices)
+			FlushAndReset();
+
 		const float texIndex = 0.0f; // white texture
 		const float tilingFactor = 1.0f;
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		// bottom left
@@ -303,6 +330,8 @@ namespace Hazel {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
+
+		s_data.Stats.QuadCount++;
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
@@ -313,6 +342,9 @@ namespace Hazel {
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const glm::vec2& size, float rotation, const Ref<Texture2D>& texture, float tilingFactor, const glm::vec4& tintColor)
 	{
 		HZ_PROFILE_FUNCTION();
+
+		if (s_data.QuadIndexCount >= s_data.MaxIndices)
+			FlushAndReset();
 
 		float texIndex = 0.0f;
 
@@ -333,7 +365,7 @@ namespace Hazel {
 		}
 
 		glm::mat4 transform = glm::translate(glm::mat4(1.0f), position)
-			* glm::rotate(glm::mat4(1.0f), glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f))
+			* glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
 			* glm::scale(glm::mat4(1.0f), glm::vec3(size.x, size.y, 1.0f));
 
 		// bottom left
@@ -366,6 +398,18 @@ namespace Hazel {
 		s_data.QuadVertexBufferPtr++;
 
 		s_data.QuadIndexCount += 6;
+
+		s_data.Stats.QuadCount++;
+	}
+
+	Renderer2D::Statistics Renderer2D::GetStats()
+	{
+		return s_data.Stats;
+	}
+
+	void Renderer2D::ResetStats()
+	{
+		memset(&s_data.Stats, 0, sizeof(Statistics));
 	}
 
 }

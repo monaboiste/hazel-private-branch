@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ParticleSystem.h"
+
 class Sandbox2D : public Hazel::Layer
 {
 public:
@@ -18,4 +20,7 @@ private:
 
 	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 	Hazel::OrthographicCameraController m_cameraController;
+
+	ParticleProps m_particle;
+	ParticleSystem m_particleSystem;
 };
