@@ -18,6 +18,10 @@ private:
 	Hazel::Ref<Hazel::VertexArray> m_squareVA;
 	Hazel::Ref<Hazel::Texture2D> m_bricksTexture;
 
+	Hazel::Ref<Hazel::Texture2D> m_spriteSheet;
+	Hazel::Ref<Hazel::SubTexture2D> m_textureStairs;
+	Hazel::Ref<Hazel::SubTexture2D> m_textureTree;
+
 	glm::vec4 m_squareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 	Hazel::OrthographicCameraController m_cameraController;
 

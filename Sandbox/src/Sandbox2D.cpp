@@ -19,6 +19,10 @@ void Sandbox2D::OnAttach()
 
 	m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 
+	m_spriteSheet = Hazel::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+	m_textureStairs = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 7.0f, 6.0f }, { 128.0f, 128.0f });
+	m_textureTree = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 2.0f, 1.0f }, { 128.0f, 128.0f }, { 1.0f, 2.0f });
+	
 	m_particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	m_particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 	m_particle.SizeBegin = 0.5f, m_particle.SizeVariation = 0.3f, m_particle.SizeEnd = 0.0f;
@@ -26,6 +30,7 @@ void Sandbox2D::OnAttach()
 	m_particle.Velocity = { 0.0f, 0.0f };
 	m_particle.VelocityVariation = { 3.0f, 1.0f };
 	m_particle.Position = { 0.0f, 0.0f };
+
 }
 
 void Sandbox2D::OnDetach()
@@ -52,12 +57,12 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	}
 
 	{
-		static float rotation = 0.0f;
-		rotation += ts * 60.0f;
-
 		HZ_PROFILE_SCOPE("Renderer Draw");
+#if 0
 		Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
 
+		static float rotation = 0.0f;
+		rotation += ts * 60.0f;
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		Hazel::Renderer2D::DrawRotatedQuad({ 0.5f, 0.8f, 1.0f }, { 1.0f, 0.8f }, glm::radians(45.0f), m_squareColor);
@@ -67,7 +72,6 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 		Hazel::Renderer2D::DrawRotatedQuad({ -2.0f, -1.0f, 0.0f }, { 0.8f, 0.5f }, glm::radians(rotation), m_bricksTexture);
 
 		Hazel::Renderer2D::EndScene();
-
 
 		Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
 		for (float y = -5.0f; y < 5.0f; y += 0.5f)
@@ -81,6 +85,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 		}
 		Hazel::Renderer2D::EndScene();
 
+#endif
 
 		if (Hazel::Input::IsMouseButtonPressed(HZ_MOUSE_BUTTON_LEFT))
 		{
@@ -91,7 +96,6 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 			auto bounds = m_cameraController.GetBounds();
 			auto pos = m_cameraController.GetCamera().GetPosition();
 			auto angle = glm::radians(m_cameraController.GetCamera().GetRotation());
-
 
 			x = (x / width) * bounds.GetWidth() - bounds.GetWidth() * 0.5f;
 			y = bounds.GetHeight() * 0.5f - (y / height) * bounds.GetHeight();
@@ -111,6 +115,12 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 
 		m_particleSystem.OnUpdate(ts);
 		m_particleSystem.OnRender(m_cameraController.GetCamera());
+
+
+		Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
+		Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_textureStairs);
+		Hazel::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_textureTree);
+		Hazel::Renderer2D::EndScene();
 	}
 }
 

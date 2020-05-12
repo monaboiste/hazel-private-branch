@@ -74,7 +74,7 @@ void ParticleSystem::OnRender(Hazel::OrthographicCamera& camera)
 			* glm::rotate(glm::mat4(1.0f), particle.Rotation, { 0.0f, 0.0f, 1.0f })
 			* glm::scale(glm::mat4(1.0f), { size, size, 1.0f });
 
-		glm::vec3 position(particle.Position.x, particle.Position.y, 0.2f);
+		glm::vec3 position(particle.Position.x, particle.Position.y, 0.0f);
 
 		Hazel::Renderer2D::DrawRotatedQuad(position, { size, size }, particle.Rotation, color);
 	}
