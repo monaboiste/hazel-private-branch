@@ -27,4 +27,7 @@ private:
 
 	ParticleProps m_particle;
 	ParticleSystem m_particleSystem;
+
+	uint32_t m_mapWidth, m_mapHeight;
+	std::unordered_map<char, Hazel::Ref<Hazel::SubTexture2D>> m_textureMap;
 };

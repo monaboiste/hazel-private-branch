@@ -6,6 +6,24 @@
 
 #include "Sandbox2D.h"
 
+static constexpr uint32_t s_mapWidth = 24;
+static constexpr char* s_mapTiles = {
+	"WWWWWWWWWWWWWWWWWWWWWWWW"
+	"WWWWWWWWWWWWDDWWWWWWWWWW"
+	"WWWWWWWWDDDDDDDDDWWWWWWW"
+	"WWWWWWDDDDDDDDDDDDWWWWWW"
+	"WWWWWDDDDDDWWDDDDDDWWWWW"
+	"WWWWDDDDDDDWWDDDDDDDWWWW"
+	"WWWDDDDDDDDDDDDDDDDDDWWW"
+	"WWWWWWWWDDDDDDDDDDDDWWWW"
+	"WWWDDDDDDDDDDDDDDDDDWWWW"
+	"WWWWDDDDDDDDDDDDDDDDWWWW"
+	"WWWWWDDDDDDDDDDDDDDWWWWW"
+	"WWWWWWDDDDDDDDDDDDWWWWWW"
+	"WWWWWWWWDDDDDDDDDWWWWWWW"
+	"WWWWWWWWWWWWWWWWWWWWWWWW"
+	"WWWWWWWWWWWWWWWWWWWWWWWW"
+};
 
 
 Sandbox2D::Sandbox2D()
@@ -19,10 +37,6 @@ void Sandbox2D::OnAttach()
 
 	m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 
-	m_spriteSheet = Hazel::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-	m_textureStairs = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 7.0f, 6.0f }, { 128.0f, 128.0f });
-	m_textureTree = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 2.0f, 1.0f }, { 128.0f, 128.0f }, { 1.0f, 2.0f });
-	
 	m_particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
 	m_particle.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 1.0f };
 	m_particle.SizeBegin = 0.5f, m_particle.SizeVariation = 0.3f, m_particle.SizeEnd = 0.0f;
@@ -31,6 +45,17 @@ void Sandbox2D::OnAttach()
 	m_particle.VelocityVariation = { 3.0f, 1.0f };
 	m_particle.Position = { 0.0f, 0.0f };
 
+	m_cameraController.SetZoomLevel(5.0f);
+
+	m_spriteSheet = Hazel::Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
+	m_textureStairs = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 7.0f, 6.0f }, { 128.0f, 128.0f });
+	m_textureTree = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 2.0f, 1.0f }, { 128.0f, 128.0f }, { 1.0f, 2.0f });
+
+	m_mapWidth = s_mapWidth;
+	m_mapHeight = strlen(s_mapTiles) / s_mapWidth;
+
+	m_textureMap['W'] = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
+	m_textureMap['D'] = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 }
 
 void Sandbox2D::OnDetach()
@@ -118,8 +143,27 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 
 
 		Hazel::Renderer2D::BeginScene(m_cameraController.GetCamera());
-		Hazel::Renderer2D::DrawQuad({ 0.0f, 0.0f }, { 1.0f, 1.0f }, m_textureStairs);
-		Hazel::Renderer2D::DrawQuad({ 1.0f, 0.0f }, { 1.0f, 2.0f }, m_textureTree);
+
+		for (uint32_t y = 0; y < m_mapHeight; y++)
+		{
+			for (uint32_t x = 0; x < m_mapWidth; x++)
+			{
+				char tileType = s_mapTiles[x + y * m_mapWidth];
+				Hazel::Ref<Hazel::SubTexture2D> subtex;
+
+				if (m_textureMap.find(tileType) != m_textureMap.end())
+					subtex = m_textureMap[tileType];
+				else // invalid tile type
+					subtex = m_textureStairs;
+
+				// draw around origin
+				float centerX = x - m_mapWidth / 2.0f;
+				float centerY = m_mapHeight / 2.0f - y;		// flip coords, tiles render from the bottom
+				Hazel::Renderer2D::DrawQuad({ centerX, centerY }, { 1, 1 }, subtex);
+			}
+
+		}
+
 		Hazel::Renderer2D::EndScene();
 	}
 }
