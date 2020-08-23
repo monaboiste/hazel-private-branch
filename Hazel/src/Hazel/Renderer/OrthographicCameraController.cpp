@@ -32,21 +32,21 @@ namespace Hazel
 
 		if (Input::IsKeyPressed(HZ_KEY_W))
 		{
-			m_cameraPosition.x -= -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
-			m_cameraPosition.y -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.x += -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
 		}
 		else if (Input::IsKeyPressed(HZ_KEY_S))
 		{
-			m_cameraPosition.x += -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
-			m_cameraPosition.y += cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.x -= -sin(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
+			m_cameraPosition.y -= cos(glm::radians(m_cameraRotation)) * m_cameraTranslationSpeed * ts;
 		}
 
 		if (m_rotation)
 		{
 			if (Input::IsKeyPressed(HZ_KEY_Q))
-				m_cameraRotation -= m_cameraRotationSpeed * ts;
-			else if (Input::IsKeyPressed(HZ_KEY_E))
 				m_cameraRotation += m_cameraRotationSpeed * ts;
+			else if (Input::IsKeyPressed(HZ_KEY_E))
+				m_cameraRotation -= m_cameraRotationSpeed * ts;
 
 			m_camera.SetRotation(m_cameraRotation);
 		}

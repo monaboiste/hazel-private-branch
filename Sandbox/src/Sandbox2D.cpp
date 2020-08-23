@@ -241,7 +241,7 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("Indices:     %d", stats.GetTotalIndexCount());
 
 	uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
-	ImGui::Image((ImTextureID)textureID, { 1080.0f, 720.0f });
+	ImGui::Image((ImTextureID)textureID, { 1080.0f, 720.0f }, { 0, 1 }, { 1, 0 });
 
 	ImGui::End();
 
