@@ -23,7 +23,7 @@ namespace Hazel {
 
 	struct Renderer2DData
 	{
-		static const uint32_t	MaxQuads = 10000;
+		static const uint32_t	MaxQuads = 20000;
 		static const uint32_t	MaxVertices = MaxQuads * 4;
 		static const uint32_t	MaxIndices = MaxQuads * 6;
 		static const uint32_t	MaxTexSlots = 32;		/* @TODO: RenderCaps */
@@ -133,7 +133,7 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		uint32_t dataSize = (uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase;
+		uint32_t dataSize = (uint32_t)((uint8_t*)s_data.QuadVertexBufferPtr - (uint8_t*)s_data.QuadVertexBufferBase);
 		s_data.QuadVertexBuffer->SetData(s_data.QuadVertexBufferBase, dataSize);
 
 		Flush();
