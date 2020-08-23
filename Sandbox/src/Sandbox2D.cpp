@@ -52,7 +52,7 @@ void Sandbox2D::OnAttach()
 	m_textureTree = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 2.0f, 1.0f }, { 128.0f, 128.0f }, { 1.0f, 2.0f });
 
 	m_mapWidth = s_mapWidth;
-	m_mapHeight = strlen(s_mapTiles) / s_mapWidth;
+	m_mapHeight = (uint32_t)strlen(s_mapTiles) / s_mapWidth;
 
 	m_textureMap['W'] = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
 	m_textureMap['D'] = Hazel::SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
