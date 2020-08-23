@@ -35,6 +35,11 @@ void Sandbox2D::OnAttach()
 {
 	HZ_PROFILE_FUNCTION();
 
+	Hazel::FrameBufferSpecification fbSpec;
+	fbSpec.Width = 1080;
+	fbSpec.Height = 720;
+	m_frameBuffer = Hazel::FrameBuffer::Create(fbSpec);
+
 	m_bricksTexture = Hazel::Texture2D::Create("assets/textures/bricks.jpg");
 
 	m_particle.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
@@ -76,6 +81,7 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 	// Render
 	{
 		HZ_PROFILE_SCOPE("Renderer Prep");
+		m_frameBuffer->Bind();
 		Hazel::RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		Hazel::RenderCommand::Clear();
 		Hazel::Renderer2D::ResetStats();
@@ -161,17 +167,15 @@ void Sandbox2D::OnUpdate(Hazel::Timestep ts)
 				float centerY = m_mapHeight / 2.0f - y;		// flip coords, tiles render from the bottom
 				Hazel::Renderer2D::DrawQuad({ centerX, centerY }, { 1, 1 }, subtex);
 			}
-
 		}
-
 		Hazel::Renderer2D::EndScene();
+		m_frameBuffer->Unbind();
 	}
 }
 
 void Sandbox2D::OnImGuiRender()
 {
 	HZ_PROFILE_FUNCTION();
-
 
 	static bool opt_fullscreen_persistant = true;
 	bool opt_fullscreen = opt_fullscreen_persistant;
@@ -192,10 +196,6 @@ void Sandbox2D::OnImGuiRender()
 		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 	}
 
-	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
-	if (dockspace_flags & ImGuiDockNodeFlags_PassthruCentralNode)
-		window_flags |= ImGuiWindowFlags_NoBackground;
-
 	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
 	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
 	// all active windows docked into it will lose their parent and become undocked.
@@ -203,8 +203,8 @@ void Sandbox2D::OnImGuiRender()
 	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 	static bool showDockspace = true;
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-	
-	ImGui::Begin("DockSpace Demo", &showDockspace, window_flags);
+
+	ImGui::Begin("Level Editor", &showDockspace, window_flags);
 	ImGui::PopStyleVar();
 
 	if (opt_fullscreen)
@@ -229,8 +229,8 @@ void Sandbox2D::OnImGuiRender()
 		ImGui::EndMenuBar();
 	}
 
-	static bool showConsole = true;
-	Hazel::ImGuiConsole::OnImGuiRender(&showConsole);
+	// static bool showConsole = true;
+	// Hazel::ImGuiConsole::OnImGuiRender(&showConsole);
 	ImGui::Begin("Settings");
 
 	auto stats = Hazel::Renderer2D::GetStats();
@@ -240,7 +240,9 @@ void Sandbox2D::OnImGuiRender()
 	ImGui::Text("Vertices:    %d", stats.GetTotalVertexCount());
 	ImGui::Text("Indices:     %d", stats.GetTotalIndexCount());
 
-	ImGui::ColorEdit4("Square color", glm::value_ptr(m_squareColor));
+	uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
+	ImGui::Image((ImTextureID)textureID, { 1080.0f, 720.0f });
+
 	ImGui::End();
 
 	ImGui::End();

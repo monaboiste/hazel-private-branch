@@ -17,6 +17,7 @@ public:
 private:
 	Hazel::Ref<Hazel::VertexArray> m_squareVA;
 	Hazel::Ref<Hazel::Texture2D> m_bricksTexture;
+	Hazel::Ref<Hazel::FrameBuffer> m_frameBuffer;
 
 	Hazel::Ref<Hazel::Texture2D> m_spriteSheet;
 	Hazel::Ref<Hazel::SubTexture2D> m_textureStairs;
