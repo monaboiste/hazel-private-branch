@@ -56,6 +56,12 @@ namespace Hazel
 		m_cameraTranslationSpeed = m_zoomLevel;
 	}
 
+	void OrthographicCameraController::OnResize(float width, float height)
+	{
+		m_aspectRatio = width / height;
+		RecalculateView();
+	}
+
 	void OrthographicCameraController::OnEvent(Event& e)
 	{
 		HZ_PROFILE_FUNCTION();

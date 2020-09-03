@@ -176,10 +176,24 @@ namespace Hazel {
 		ImGui::Text("Vertices:    %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices:     %d", stats.GetTotalIndexCount());
 
-		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
-		ImGui::Image((ImTextureID)textureID, { 1080.0f, 720.0f }, { 0, 1 }, { 1, 0 }); // Image is flipped.
 
 		ImGui::End();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
+		ImGui::Begin("Viewport");
+		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
+		if (m_viewportSize != *((glm::vec2*)& viewportPanelSize))
+		{
+			m_frameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
+			m_cameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
+			m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
+		}
+
+		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
+		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
+
+		ImGui::End();
+		ImGui::PopStyleVar();
 
 		ImGui::End();
 	}
