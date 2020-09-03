@@ -16,11 +16,15 @@ namespace Hazel {
 
 		void virtual OnAttach() override;
 		void virtual OnDetach() override;
+		void virtual OnEvent(Event& e) override;
+
+		void SetBlockImGuiEvents(bool block) { m_blockImGuiEvent = block; }
 
 		void Begin();
 		void End();
 	private:
 		float m_time = 0.0f;
+		bool m_blockImGuiEvent = true;
 	};
 
 }

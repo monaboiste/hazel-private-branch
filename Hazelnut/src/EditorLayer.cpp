@@ -69,7 +69,8 @@ namespace Hazel {
 
 		// Update
 		{
-			m_cameraController.OnUpdate(ts);
+			if (m_viewportFocused)
+				m_cameraController.OnUpdate(ts);
 		}
 
 		// Render
@@ -181,8 +182,12 @@ namespace Hazel {
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
+
+		m_viewportFocused = ImGui::IsWindowFocused();
+		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused);
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_viewportSize != *((glm::vec2*)& viewportPanelSize))
+		if (m_viewportSize != *((glm::vec2*) & viewportPanelSize))
 		{
 			m_frameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
 			m_cameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);

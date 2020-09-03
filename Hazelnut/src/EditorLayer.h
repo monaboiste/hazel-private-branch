@@ -29,6 +29,7 @@ namespace Hazel {
 		uint32_t m_mapWidth, m_mapHeight;
 		std::unordered_map<char, Ref<SubTexture2D>> m_textureMap;
 
+		bool m_viewportFocused = false;
 		glm::vec2 m_viewportSize = { 1080.0f, 720.0f };
 	};
 
