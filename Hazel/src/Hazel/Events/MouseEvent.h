@@ -63,6 +63,8 @@ namespace Hazel {
 		MouseButtonEvent(int button)
 			: m_button(button) {}
 
+		~MouseButtonEvent() = default;
+
 		int m_button;
 	};
 
