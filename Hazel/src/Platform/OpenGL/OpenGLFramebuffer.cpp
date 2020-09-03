@@ -14,6 +14,8 @@ namespace Hazel {
 	OpenGLFrameBuffer::~OpenGLFrameBuffer()
 	{
 		glDeleteFramebuffers(1, &m_rendererID);
+		glDeleteTextures(1, &m_colorAttachment);
+		glDeleteTextures(1, &m_depthAttachment);
 	}
 
 	void OpenGLFrameBuffer::Invalidate()
