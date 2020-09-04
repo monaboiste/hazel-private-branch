@@ -55,6 +55,12 @@ namespace Hazel {
 
 		m_textureMap['W'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
 		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
+
+		m_activeScene = CreateRef<Scene>();
+		m_squareEntt = m_activeScene->CreateEntity();
+
+		m_activeScene->GetRegistery().emplace<TransformComponent>(m_squareEntt);
+		m_activeScene->GetRegistery().emplace<SpriteRendererComponent>(m_squareEntt, glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	}
 
 	void EditorLayer::OnDetach()
@@ -67,47 +73,40 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
-		// Update
-		{
-			if (m_viewportFocused)
-				m_cameraController.OnUpdate(ts);
-		}
+		if (m_viewportFocused)
+			m_cameraController.OnUpdate(ts);
 
-		// Render
-		{
-			HZ_PROFILE_SCOPE("Renderer Prep");
-			m_frameBuffer->Bind();
-			RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
-			RenderCommand::Clear();
-			Renderer2D::ResetStats();
-		}
+		m_frameBuffer->Bind();
+		RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+		Renderer2D::ResetStats();
 
-		{
-			HZ_PROFILE_SCOPE("Renderer Draw");
+		Renderer2D::BeginScene(m_cameraController.GetCamera());
+		
+		m_activeScene->OnUpdate(ts);
 
-			Renderer2D::BeginScene(m_cameraController.GetCamera());
+		//for (uint32_t y = 0; y < m_mapHeight; y++)
+		//{
+		//	for (uint32_t x = 0; x < m_mapWidth; x++)
+		//	{
+		//		char tileType = s_mapTiles[x + y * m_mapWidth];
+		//		Ref<SubTexture2D> subtex;
 
-			for (uint32_t y = 0; y < m_mapHeight; y++)
-			{
-				for (uint32_t x = 0; x < m_mapWidth; x++)
-				{
-					char tileType = s_mapTiles[x + y * m_mapWidth];
-					Ref<SubTexture2D> subtex;
+		//		if (m_textureMap.find(tileType) != m_textureMap.end())
+		//			subtex = m_textureMap[tileType];
+		//		else // invalid tile type
+		//			subtex = m_textureStairs;
 
-					if (m_textureMap.find(tileType) != m_textureMap.end())
-						subtex = m_textureMap[tileType];
-					else // invalid tile type
-						subtex = m_textureStairs;
+		//		// draw around origin
+		//		float centerX = x - m_mapWidth / 2.0f;
+		//		float centerY = m_mapHeight / 2.0f - y;		// flip coords, tiles render from the bottom
+		//		Renderer2D::DrawQuad({ centerX, centerY }, { 1, 1 }, subtex);
+		//	}
+		//}
 
-					// draw around origin
-					float centerX = x - m_mapWidth / 2.0f;
-					float centerY = m_mapHeight / 2.0f - y;		// flip coords, tiles render from the bottom
-					Renderer2D::DrawQuad({ centerX, centerY }, { 1, 1 }, subtex);
-				}
-			}
-			Renderer2D::EndScene();
-			m_frameBuffer->Unbind();
-		}
+
+		Renderer2D::EndScene();
+		m_frameBuffer->Unbind();
 	}
 
 	void EditorLayer::OnImGuiRender()
@@ -179,6 +178,13 @@ namespace Hazel {
 
 
 		ImGui::End();
+
+		ImGui::Begin("Square Entity");
+
+		auto& sprite = m_activeScene->GetRegistery().get<SpriteRendererComponent>(m_squareEntt);
+		ImGui::ColorPicker4("Square color", glm::value_ptr(sprite.Color));
+		ImGui::End();
+
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
