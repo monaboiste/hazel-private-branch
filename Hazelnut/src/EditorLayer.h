@@ -24,7 +24,6 @@ namespace Hazel {
 		Ref<SubTexture2D> m_textureTree;
 
 		OrthographicCameraController m_cameraController;
-		entt::entity m_squareEntt = entt::null;
 
 		uint32_t m_mapWidth, m_mapHeight;
 		std::unordered_map<char, Ref<SubTexture2D>> m_textureMap;
@@ -33,6 +32,7 @@ namespace Hazel {
 		glm::vec2 m_viewportSize = { 1080.0f, 720.0f };
 
 		Ref<Scene> m_activeScene;
+		Entity m_squareEntt;
 	};
 
 }

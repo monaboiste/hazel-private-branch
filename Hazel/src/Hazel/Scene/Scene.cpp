@@ -2,6 +2,7 @@
 #include "Scene.h"
 
 #include "Component.h"
+#include "Entity.h"
 #include "Hazel/Renderer/Renderer2D.h"
 
 #include <glm/glm.hpp>
@@ -19,7 +20,7 @@ namespace Hazel {
 
 	void Scene::OnUpdate(Timestep ts)
 	{
-		auto group = m_enttRegistery.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+		auto group = m_registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
 		{
 			auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
@@ -28,9 +29,15 @@ namespace Hazel {
 		}
 	}
 
-	entt::entity Scene::CreateEntity()
+	Entity Scene::CreateEntity(const std::string& name)
 	{
-		return m_enttRegistery.create();
+		Entity entity(this, m_registry.create());
+
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+		entity.AddComponent<TransformComponent>();
+		
+		return entity;
 	}
 
 }
