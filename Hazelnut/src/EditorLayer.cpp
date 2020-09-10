@@ -57,10 +57,9 @@ namespace Hazel {
 		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 
 		m_activeScene = CreateRef<Scene>();
-		m_squareEntt = m_activeScene->CreateEntity();
+		m_squareEntt = m_activeScene->CreateEntity("Square");
 
-		m_activeScene->GetRegistery().emplace<TransformComponent>(m_squareEntt);
-		m_activeScene->GetRegistery().emplace<SpriteRendererComponent>(m_squareEntt, glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+		m_squareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 	}
 
 	void EditorLayer::OnDetach()
@@ -82,8 +81,7 @@ namespace Hazel {
 		Renderer2D::ResetStats();
 
 		Renderer2D::BeginScene(m_cameraController.GetCamera());
-		
-		m_activeScene->OnUpdate(ts);
+
 
 		//for (uint32_t y = 0; y < m_mapHeight; y++)
 		//{
@@ -104,6 +102,7 @@ namespace Hazel {
 		//	}
 		//}
 
+		m_activeScene->OnUpdate(ts);
 
 		Renderer2D::EndScene();
 		m_frameBuffer->Unbind();
@@ -179,11 +178,14 @@ namespace Hazel {
 
 		ImGui::End();
 
-		ImGui::Begin("Square Entity");
-
-		auto& sprite = m_activeScene->GetRegistery().get<SpriteRendererComponent>(m_squareEntt);
-		ImGui::ColorPicker4("Square color", glm::value_ptr(sprite.Color));
-		ImGui::End();
+		if (m_squareEntt)
+		{
+			auto& sprite = m_squareEntt.GetComponent<SpriteRendererComponent>();
+			auto squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+			ImGui::Begin(squareName.data());
+			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
+			ImGui::End();
+		}
 
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
