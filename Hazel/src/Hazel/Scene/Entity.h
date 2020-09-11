@@ -43,7 +43,7 @@ namespace Hazel {
 		operator bool() const { return m_entityHandle != entt::null; }
 
 	private:
-		Scene* m_scene; // @TODO: switch to intrusive reference counting
+		Scene* m_scene = nullptr; // @TODO: switch to intrusive reference counting
 		entt::entity m_entityHandle = entt::null;
 	};
 
