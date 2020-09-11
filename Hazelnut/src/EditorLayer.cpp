@@ -58,8 +58,12 @@ namespace Hazel {
 
 		m_activeScene = CreateRef<Scene>();
 		m_squareEntt = m_activeScene->CreateEntity("Square");
+		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
+		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
 
 		m_squareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+		m_mainCameraEntt.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f)).Primary = true;
+		m_secondCameraEntt.AddComponent<CameraComponent>(glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, -1.0f, 1.0f));
 	}
 
 	void EditorLayer::OnDetach()
@@ -79,8 +83,6 @@ namespace Hazel {
 		RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
-
-		Renderer2D::BeginScene(m_cameraController.GetCamera());
 
 
 		//for (uint32_t y = 0; y < m_mapHeight; y++)
@@ -104,7 +106,6 @@ namespace Hazel {
 
 		m_activeScene->OnUpdate(ts);
 
-		Renderer2D::EndScene();
 		m_frameBuffer->Unbind();
 	}
 
@@ -181,12 +182,22 @@ namespace Hazel {
 		if (m_squareEntt)
 		{
 			auto& sprite = m_squareEntt.GetComponent<SpriteRendererComponent>();
-			auto squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+			auto& squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
 			ImGui::Begin(squareName.data());
 			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
 			ImGui::End();
 		}
 
+		ImGui::Begin("Camera Switch Test");
+
+		ImGui::DragFloat2("Main Camera Transform", glm::value_ptr(m_mainCameraEntt.GetComponent<TransformComponent>().Transform[3]));
+
+		if (ImGui::Checkbox("Main Camera", &m_primaryCamera))
+		{
+			m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
+			m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
+		}
+		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");

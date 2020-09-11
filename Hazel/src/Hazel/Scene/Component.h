@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Hazel/Renderer/Camera.h"
+
 #include <glm/glm.hpp>
 
 namespace Hazel {
@@ -38,4 +40,14 @@ namespace Hazel {
 		SpriteRendererComponent(const SpriteRendererComponent&) = default;
 	};
 
+	struct CameraComponent
+	{
+		Hazel::Camera Camera;
+		bool Primary = false;
+
+		CameraComponent() = default;
+		CameraComponent(const glm::mat4& projection)
+			: Camera(projection) {}
+		CameraComponent(const CameraComponent&) = default;
+	};
 }
