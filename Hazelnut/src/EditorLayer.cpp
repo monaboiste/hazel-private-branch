@@ -56,14 +56,18 @@ namespace Hazel {
 		m_textureMap['W'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
 		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 
-		m_activeScene = CreateRef<Scene>();
-		m_squareEntt = m_activeScene->CreateEntity("Square");
-		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
-		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
 
+		// Scene
+		m_activeScene = CreateRef<Scene>();
+
+		m_squareEntt = m_activeScene->CreateEntity("Square");
 		m_squareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
-		m_mainCameraEntt.AddComponent<CameraComponent>(glm::ortho(-16.0f, 16.0f, -9.0f, 9.0f, -1.0f, 1.0f)).Primary = true;
-		m_secondCameraEntt.AddComponent<CameraComponent>(glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, -1.0f, 1.0f));
+
+		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
+		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
+
+		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
+		m_secondCameraEntt.AddComponent<CameraComponent>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -76,12 +80,15 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		// Resize
 		if (FrameBufferSpecification spec = m_frameBuffer->GetSpecification();
-			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&
+			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&	// zero sized framebuffer is invalid
 			(spec.Width != (uint32_t)m_viewportSize.x || spec.Height != (uint32_t)m_viewportSize.y))
 		{
 			m_frameBuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_cameraController.OnResize(m_viewportSize.x, m_viewportSize.y);
+
+			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
 
 		if (m_viewportFocused)
@@ -197,13 +204,21 @@ namespace Hazel {
 		}
 
 		ImGui::Begin("Camera Switch Test");
-
-		ImGui::DragFloat2("Main Camera Transform", glm::value_ptr(m_mainCameraEntt.GetComponent<TransformComponent>().Transform[3]));
-
-		if (ImGui::Checkbox("Main Camera", &m_primaryCamera))
 		{
-			m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
-			m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
+			ImGui::DragFloat2("Main Camera Transform", glm::value_ptr(m_mainCameraEntt.GetComponent<TransformComponent>().Transform[3]));
+
+			if (ImGui::Checkbox("Main Camera", &m_primaryCamera))
+			{
+				m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
+				m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
+			}
+		}
+		{
+			auto& secondCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
+			float orthoSize = secondCamera.GetOrthographicSize();
+
+			if (ImGui::DragFloat("Second Camera Orthosize", &orthoSize))
+				secondCamera.SetOrthographicSize(orthoSize);
 		}
 		ImGui::End();
 

@@ -52,6 +52,22 @@ namespace Hazel {
 		}
 	}
 
+	void Scene::OnViewportResize(uint32_t width, uint32_t height)
+	{
+		m_viewportWidth = width;
+		m_viewportHeight = height;
+
+		// Resize Non-Fixed Aspect Ratio cameras
+		auto view = m_registry.view<CameraComponent>();
+
+		for (auto entity : view)
+		{
+			auto& cameraComponent = view.get<CameraComponent>(entity);
+			if (!cameraComponent.FixedAspectRatio)
+				cameraComponent.Camera.SetViewportSize(width, height);
+		}
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity(this, m_registry.create());
