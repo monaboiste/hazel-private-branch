@@ -56,7 +56,6 @@ namespace Hazel {
 		m_textureMap['W'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
 		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 
-
 		// Scene
 		m_activeScene = CreateRef<Scene>();
 
@@ -99,7 +98,6 @@ namespace Hazel {
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
 
-
 		//for (uint32_t y = 0; y < m_mapHeight; y++)
 		//{
 		//	for (uint32_t x = 0; x < m_mapWidth; x++)
@@ -120,7 +118,6 @@ namespace Hazel {
 		//}
 
 		m_activeScene->OnUpdate(ts);
-
 		m_frameBuffer->Unbind();
 	}
 
@@ -198,6 +195,7 @@ namespace Hazel {
 		{
 			auto& sprite = m_squareEntt.GetComponent<SpriteRendererComponent>();
 			auto& squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+
 			ImGui::Begin(squareName.data());
 			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
 			ImGui::End();
