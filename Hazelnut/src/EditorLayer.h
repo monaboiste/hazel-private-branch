@@ -33,6 +33,9 @@ namespace Hazel {
 
 		Ref<Scene> m_activeScene;
 		Entity m_squareEntt;
+		Entity m_mainCameraEntt;
+		Entity m_secondCameraEntt;
+		bool m_primaryCamera = true;
 	};
 
 }

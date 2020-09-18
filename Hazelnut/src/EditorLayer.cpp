@@ -56,10 +56,17 @@ namespace Hazel {
 		m_textureMap['W'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
 		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 
+		// Scene
 		m_activeScene = CreateRef<Scene>();
-		m_squareEntt = m_activeScene->CreateEntity("Square");
 
+		m_squareEntt = m_activeScene->CreateEntity("Square");
 		m_squareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+
+		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
+		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
+
+		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
+		m_secondCameraEntt.AddComponent<CameraComponent>();
 	}
 
 	void EditorLayer::OnDetach()
@@ -72,6 +79,17 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		// Resize
+		if (FrameBufferSpecification spec = m_frameBuffer->GetSpecification();
+			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&	// zero sized framebuffer is invalid
+			(spec.Width != (uint32_t)m_viewportSize.x || spec.Height != (uint32_t)m_viewportSize.y))
+		{
+			m_frameBuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_cameraController.OnResize(m_viewportSize.x, m_viewportSize.y);
+
+			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		}
+
 		if (m_viewportFocused)
 			m_cameraController.OnUpdate(ts);
 
@@ -79,9 +97,6 @@ namespace Hazel {
 		RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
-
-		Renderer2D::BeginScene(m_cameraController.GetCamera());
-
 
 		//for (uint32_t y = 0; y < m_mapHeight; y++)
 		//{
@@ -103,8 +118,6 @@ namespace Hazel {
 		//}
 
 		m_activeScene->OnUpdate(ts);
-
-		Renderer2D::EndScene();
 		m_frameBuffer->Unbind();
 	}
 
@@ -181,12 +194,31 @@ namespace Hazel {
 		if (m_squareEntt)
 		{
 			auto& sprite = m_squareEntt.GetComponent<SpriteRendererComponent>();
-			auto squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+			auto& squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+
 			ImGui::Begin(squareName.data());
 			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
 			ImGui::End();
 		}
 
+		ImGui::Begin("Camera Switch Test");
+		{
+			ImGui::DragFloat2("Main Camera Transform", glm::value_ptr(m_mainCameraEntt.GetComponent<TransformComponent>().Transform[3]));
+
+			if (ImGui::Checkbox("Main Camera", &m_primaryCamera))
+			{
+				m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
+				m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
+			}
+		}
+		{
+			auto& secondCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
+			float orthoSize = secondCamera.GetOrthographicSize();
+
+			if (ImGui::DragFloat("Second Camera Orthosize", &orthoSize))
+				secondCamera.SetOrthographicSize(orthoSize);
+		}
+		ImGui::End();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
@@ -195,12 +227,7 @@ namespace Hazel {
 		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_viewportSize != *((glm::vec2*) & viewportPanelSize))
-		{
-			m_frameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_cameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-			m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-		}
+		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
