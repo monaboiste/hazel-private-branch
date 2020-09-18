@@ -76,6 +76,14 @@ namespace Hazel {
 	{
 		HZ_PROFILE_FUNCTION();
 
+		if (FrameBufferSpecification spec = m_frameBuffer->GetSpecification();
+			m_viewportSize.x > 0.0f && m_viewportSize.y > 0.0f &&
+			(spec.Width != (uint32_t)m_viewportSize.x || spec.Height != (uint32_t)m_viewportSize.y))
+		{
+			m_frameBuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_cameraController.OnResize(m_viewportSize.x, m_viewportSize.y);
+		}
+
 		if (m_viewportFocused)
 			m_cameraController.OnUpdate(ts);
 
@@ -206,12 +214,7 @@ namespace Hazel {
 		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused);
 
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_viewportSize != *((glm::vec2*) & viewportPanelSize))
-		{
-			m_frameBuffer->Resize((uint32_t)viewportPanelSize.x, (uint32_t)viewportPanelSize.y);
-			m_cameraController.OnResize(viewportPanelSize.x, viewportPanelSize.y);
-			m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-		}
+		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
