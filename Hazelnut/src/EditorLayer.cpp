@@ -67,6 +67,31 @@ namespace Hazel {
 
 		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
 		m_secondCameraEntt.AddComponent<CameraComponent>();
+
+		class CameraBehavior : public ScriptableEntity
+		{
+		public:
+			void OnCreate() {}
+			void OnDestroy() {}
+			void OnUpdate(Timestep ts) 
+			{ 
+				glm::mat4& transform = GetComponent<TransformComponent>().Transform;
+				const float kSpeed = 5.0f;
+
+				if (Input::IsKeyPressed(HZ_KEY_A))
+					transform[3][0] -= kSpeed * ts;
+				else if (Input::IsKeyPressed(HZ_KEY_D))
+					transform[3][0] += kSpeed * ts;
+
+				if (Input::IsKeyPressed(HZ_KEY_W))
+					transform[3][1] += kSpeed * ts;
+				else if (Input::IsKeyPressed(HZ_KEY_S))
+					transform[3][1] -= kSpeed * ts;
+			}
+		};
+
+		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraBehavior>();
+
 	}
 
 	void EditorLayer::OnDetach()
@@ -212,11 +237,11 @@ namespace Hazel {
 			}
 		}
 		{
-			auto& secondCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
-			float orthoSize = secondCamera.GetOrthographicSize();
+			auto& mainCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
+			float orthoSize = mainCamera.GetOrthographicSize();
 
-			if (ImGui::DragFloat("Second Camera Orthosize", &orthoSize))
-				secondCamera.SetOrthographicSize(orthoSize);
+			if (ImGui::DragFloat("Main Camera Orthosize", &orthoSize, 0.5f, 1.0f, 20.0f))
+				mainCamera.SetOrthographicSize(orthoSize);
 		}
 		ImGui::End();
 
