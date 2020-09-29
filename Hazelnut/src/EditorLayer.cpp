@@ -1,6 +1,4 @@
-#include <Hazel.h>
-
-#include "imgui\imgui.h"
+#include <imgui\imgui.h>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
@@ -91,6 +89,8 @@ namespace Hazel {
 		};
 
 		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraController>();
+
+		m_scenePanel.SetContext(m_activeScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -260,7 +260,10 @@ namespace Hazel {
 		ImGui::PopStyleVar();
 
 		ImGui::End();
-	}
+	
+		// Scene Hierarchy Panel
+		m_scenePanel.OnImguiRender();
+}
 
 	void EditorLayer::OnEvent(Event& e)
 	{
