@@ -68,7 +68,7 @@ namespace Hazel {
 		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
 		m_secondCameraEntt.AddComponent<CameraComponent>();
 
-		class CameraBehavior : public ScriptableEntity
+		class CameraController : public ScriptableEntity
 		{
 		public:
 			void OnCreate() {}
@@ -90,8 +90,7 @@ namespace Hazel {
 			}
 		};
 
-		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraBehavior>();
-
+		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 	}
 
 	void EditorLayer::OnDetach()
