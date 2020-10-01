@@ -71,8 +71,8 @@ namespace Hazel {
 		public:
 			void OnCreate() {}
 			void OnDestroy() {}
-			void OnUpdate(Timestep ts) 
-			{ 
+			void OnUpdate(Timestep ts)
+			{
 				glm::mat4& transform = GetComponent<TransformComponent>().Transform;
 				const float kSpeed = 5.0f;
 
@@ -227,19 +227,18 @@ namespace Hazel {
 
 		ImGui::Begin("Camera Switch Test");
 		{
-			ImGui::DragFloat2("Main Camera Transform", glm::value_ptr(m_mainCameraEntt.GetComponent<TransformComponent>().Transform[3]));
-
-			if (ImGui::Checkbox("Main Camera", &m_primaryCamera))
+			std::string& tag = m_mainCameraEntt.GetComponent<TagComponent>().Tag;
+			if (ImGui::Checkbox(tag.data(), &m_primaryCamera))
 			{
 				m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
 				m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
 			}
-		}
-		{
+		
 			auto& mainCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
 			float orthoSize = mainCamera.GetOrthographicSize();
 
-			if (ImGui::DragFloat("Main Camera Orthosize", &orthoSize, 0.5f, 1.0f, 20.0f))
+			std::string tagOrthoSize = tag;
+			if (ImGui::DragFloat(tagOrthoSize.append(" orthosize").data(), &orthoSize, 0.5f, 1.0f, 20.0f))
 				mainCamera.SetOrthographicSize(orthoSize);
 		}
 		ImGui::End();
@@ -260,10 +259,10 @@ namespace Hazel {
 		ImGui::PopStyleVar();
 
 		ImGui::End();
-	
+
 		// Scene Hierarchy Panel
 		m_scenePanel.OnImguiRender();
-}
+	}
 
 	void EditorLayer::OnEvent(Event& e)
 	{

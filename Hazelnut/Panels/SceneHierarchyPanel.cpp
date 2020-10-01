@@ -2,9 +2,10 @@
 #include "Hazel/Scene/Component.h"
 
 #include <imgui/imgui.h>
+#include <glm/gtc/type_ptr.hpp>
 
 namespace Hazel {
-	
+
 	SceneHierarchyPanel::SceneHierarchyPanel(const Ref<Scene>& context)
 	{
 		SetContext(context);
@@ -13,12 +14,24 @@ namespace Hazel {
 	void SceneHierarchyPanel::OnImguiRender()
 	{
 		ImGui::Begin("Scene Hierarchy");
+		{
+			m_context->m_registry.each([this](auto entityID) {
+				Entity entity(m_context.get(), entityID);
+				DrawEntityNode(entity);
+				});
+		}
 
-		m_context->m_registry.each([this](auto entityID) {
-			Entity entity(m_context.get(), entityID);
-			DrawEntityNode(entity);
-		});
+		// Clear properties window when clicked blank space
+		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+			m_selectionContext = {};
 
+		ImGui::End();
+
+		ImGui::Begin("Properties");
+		{
+			if (m_selectionContext)
+				DrawComponents(m_selectionContext);
+		}
 		ImGui::End();
 	}
 
@@ -31,9 +44,9 @@ namespace Hazel {
 	{
 		std::string& tag = entity.GetComponent<TagComponent>().Tag;
 		ImGuiTreeNodeFlags flags = ((m_selectionContext == entity) ? ImGuiTreeNodeFlags_OpenOnArrow : 0) | ImGuiTreeNodeFlags_Selected;
-		
+
 		bool expanded = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)entity, flags, tag.data());
-		
+
 		if (ImGui::IsItemClicked())
 			m_selectionContext = entity;
 
@@ -43,6 +56,33 @@ namespace Hazel {
 			ImGui::Text("Property 2");
 			ImGui::Text("Property 3");
 			ImGui::TreePop();
+		}
+	}
+
+	void SceneHierarchyPanel::DrawComponents(Entity entity)
+	{
+		if (entity.HasComponent<TagComponent>())
+		{
+			std::string& tag = entity.GetComponent<TagComponent>().Tag;
+
+			static constexpr size_t BUFF_SIZE = 256;
+			static char buffer[BUFF_SIZE];
+
+			std::memset(buffer, 0, BUFF_SIZE);
+			strcpy_s(buffer, BUFF_SIZE, tag.data());
+
+			if (ImGui::InputText("Tag", buffer, BUFF_SIZE - 1))
+				tag = std::string(buffer);
+		}
+
+		if (entity.HasComponent<TransformComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform Component"))
+			{
+				auto& transform = entity.GetComponent<TransformComponent>().Transform;
+				ImGui::DragFloat2("Position", glm::value_ptr(transform[3]), 0.25f);
+				ImGui::TreePop();
+			}
 		}
 	}
 
