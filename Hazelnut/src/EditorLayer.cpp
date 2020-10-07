@@ -6,28 +6,8 @@
 
 namespace Hazel {
 
-	static constexpr uint32_t s_mapWidth = 24;
-	static constexpr char* s_mapTiles = {
-		"WWWWWWWWWWWWWWWWWWWWWWWW"
-		"WWWWWWWWWWWWDDWWWWWWWWWW"
-		"WWWWWWWWDDDDDDDDDWWWWWWW"
-		"WWWWWWDDDDDDDDDDDDWWWWWW"
-		"WWWWWDDDDDDWWDDDDDDWWWWW"
-		"WWWWDDDDDDDWWDDDDDDDWWWW"
-		"WWWDDDDDDDDDDDDDDDDDDWWW"
-		"WWWWWWWWDDDDDDDDDDDDWWWW"
-		"WWWDDDDDDDDDDDDDDDDDWWWW"
-		"WWWWDDDDDDDDDDDDDDDDWWWW"
-		"WWWWWDDDDDDDDDDDDDDWWWWW"
-		"WWWWWWDDDDDDDDDDDDWWWWWW"
-		"WWWWWWWWDDDDDDDDDWWWWWWW"
-		"WWWWWWWWWWWWWWWWWWWWWWWW"
-		"WWWWWWWWWWWWWWWWWWWWWWWW"
-	};
-
-
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer"), m_cameraController(1280.0f / 720.0f, true)
+		: Layer("EditorLayer")
 	{
 	}
 
@@ -39,20 +19,6 @@ namespace Hazel {
 		fbSpec.Width = 1080;
 		fbSpec.Height = 720;
 		m_frameBuffer = FrameBuffer::Create(fbSpec);
-
-		m_bricksTexture = Texture2D::Create("assets/textures/bricks.jpg");
-
-		m_cameraController.SetZoomLevel(5.0f);
-
-		m_spriteSheet = Texture2D::Create("assets/game/textures/RPGpack_sheet_2X.png");
-		m_textureStairs = SubTexture2D::CreateFromCoords(m_spriteSheet, { 7.0f, 6.0f }, { 128.0f, 128.0f });
-		m_textureTree = SubTexture2D::CreateFromCoords(m_spriteSheet, { 2.0f, 1.0f }, { 128.0f, 128.0f }, { 1.0f, 2.0f });
-
-		m_mapWidth = s_mapWidth;
-		m_mapHeight = (uint32_t)strlen(s_mapTiles) / s_mapWidth;
-
-		m_textureMap['W'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 11, 11 }, { 128, 128 });
-		m_textureMap['D'] = SubTexture2D::CreateFromCoords(m_spriteSheet, { 6, 11 }, { 128, 128 });
 
 		// Scene
 		m_activeScene = CreateRef<Scene>();
@@ -113,38 +79,13 @@ namespace Hazel {
 			(spec.Width != (uint32_t)m_viewportSize.x || spec.Height != (uint32_t)m_viewportSize.y))
 		{
 			m_frameBuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-			m_cameraController.OnResize(m_viewportSize.x, m_viewportSize.y);
-
 			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		}
-
-		if (m_viewportFocused)
-			m_cameraController.OnUpdate(ts);
 
 		m_frameBuffer->Bind();
 		RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
-
-		//for (uint32_t y = 0; y < m_mapHeight; y++)
-		//{
-		//	for (uint32_t x = 0; x < m_mapWidth; x++)
-		//	{
-		//		char tileType = s_mapTiles[x + y * m_mapWidth];
-		//		Ref<SubTexture2D> subtex;
-
-		//		if (m_textureMap.find(tileType) != m_textureMap.end())
-		//			subtex = m_textureMap[tileType];
-		//		else // invalid tile type
-		//			subtex = m_textureStairs;
-
-		//		// draw around origin
-		//		float centerX = x - m_mapWidth / 2.0f;
-		//		float centerY = m_mapHeight / 2.0f - y;		// flip coords, tiles render from the bottom
-		//		Renderer2D::DrawQuad({ centerX, centerY }, { 1, 1 }, subtex);
-		//	}
-		//}
-
 		m_activeScene->OnUpdate(ts);
 		m_frameBuffer->Unbind();
 	}
@@ -250,9 +191,6 @@ namespace Hazel {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 
-		m_viewportFocused = ImGui::IsWindowFocused();
-		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused);
-
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
@@ -270,7 +208,6 @@ namespace Hazel {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		m_cameraController.OnEvent(e);
 	}
 
 }
