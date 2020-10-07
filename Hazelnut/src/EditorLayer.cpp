@@ -57,8 +57,12 @@ namespace Hazel {
 		// Scene
 		m_activeScene = CreateRef<Scene>();
 
-		m_squareEntt = m_activeScene->CreateEntity("Square");
-		m_squareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+		m_orangeSquareEntt = m_activeScene->CreateEntity("Square");
+		m_orangeSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
+
+		m_greenSquareEntt = m_activeScene->CreateEntity("Square2");
+		m_greenSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(0.2f, 1.0f, 0.1f, 1.0f));
+		m_greenSquareEntt.GetComponent<TransformComponent>().Transform[3] += glm::vec4(3.0f, 0.5f, 0.0f, 0.0f);
 
 		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
 		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
@@ -215,10 +219,10 @@ namespace Hazel {
 
 		ImGui::End();
 
-		if (m_squareEntt)
+		if (m_orangeSquareEntt)
 		{
-			auto& sprite = m_squareEntt.GetComponent<SpriteRendererComponent>();
-			auto& squareName = m_squareEntt.GetComponent<TagComponent>().Tag + " color";
+			auto& sprite = m_orangeSquareEntt.GetComponent<SpriteRendererComponent>();
+			auto& squareName = m_orangeSquareEntt.GetComponent<TagComponent>().Tag + " color";
 
 			ImGui::Begin(squareName.data());
 			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
