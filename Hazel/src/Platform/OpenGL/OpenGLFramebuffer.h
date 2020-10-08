@@ -19,6 +19,7 @@ namespace Hazel {
 		void Invalidate();
 
 		virtual uint32_t GetColorAttachmentRendererID() const override { return m_colorAttachment; }
+	
 	private:
 		uint32_t m_rendererID = 0;
 		uint32_t m_colorAttachment = 0, m_depthAttachment = 0;

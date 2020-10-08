@@ -27,9 +27,11 @@ namespace Hazel {
 
 		inline Window& GetWindow() { return *m_window; }
 		static inline Application& Get() { return *ms_instance; }
+
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
+
 	private:
 		static Application* ms_instance;
 		bool m_running = true;

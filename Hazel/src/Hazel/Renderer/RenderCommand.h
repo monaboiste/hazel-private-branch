@@ -31,6 +31,7 @@ namespace Hazel {
 		{
 			ms_RendererAPI->SetViewport(x, y, width, height);
 		}
+
 	private:
 		static Scope<RendererAPI> ms_RendererAPI;
 	};

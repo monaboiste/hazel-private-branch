@@ -25,8 +25,10 @@ namespace Hazel
 				Critical	= 5,
 				Off			= 6			/* Display nothing */
 			};
+
 		private:
 			struct Color { float r, g, b, a; };
+
 		public:
 			Message(const std::string message = "", Level level = Level::Invalid);
 			~Message() = default;
@@ -38,19 +40,23 @@ namespace Hazel
 			static const char* GetLevelName(Level level);
 
 			static Color GetRenderColor(Level level);
+		
 		public:
 			const Level mLevel;
 			const std::string mMessage;
 			static std::vector<Level> s_mLevels;
 		};
+
 	public:
 		~ImGuiConsole() = default;
 
 		static void AddMessage(Ref<Message> message);
 		static void Clear();
 		static void OnImGuiRender(bool* show);
+
 	protected:
 		ImGuiConsole() = default;
+
 	private:
 		struct ImGuiRendering
 		{
@@ -58,6 +64,7 @@ namespace Hazel
 			static void ImGuiRenderSettings();
 			static void ImGuiRenderMessages();
 		};
+
 	private:
 		static float ms_displayScale;
 		static uint16_t ms_messageBufferCapacity;

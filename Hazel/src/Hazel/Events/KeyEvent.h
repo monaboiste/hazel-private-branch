@@ -11,6 +11,7 @@ namespace Hazel {
 		inline int GetKeyCode() const { return m_keyCode; }
 
 		EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
+
 	protected:
 		KeyEvent(int keycode)
 			: m_keyCode(keycode) {}
@@ -38,6 +39,7 @@ namespace Hazel {
 		}
 
 		EVENT_CLASS_TYPE(KeyPressed)
+
 	private:
 		int m_repeatCount;
 	};

@@ -22,6 +22,7 @@ namespace Hazel {
 
 		void Begin();
 		void End();
+
 	private:
 		float m_time = 0.0f;
 		bool m_blockImGuiEvent = true;

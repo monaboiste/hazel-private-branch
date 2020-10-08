@@ -17,6 +17,7 @@ namespace Hazel {
 		virtual void OnUpdate(Timestep ts) override;
 		virtual void OnImGuiRender() override;
 		virtual void OnEvent(Event& e) override;
+	
 	private:
 		Ref<FrameBuffer> m_frameBuffer;
 

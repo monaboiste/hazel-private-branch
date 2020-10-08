@@ -35,10 +35,12 @@ namespace Hazel {
 		void SetZoomLevel(float level) { m_zoomLevel = level; RecalculateView(); }
 		inline const float GetZoomLevel(float level) const { return m_zoomLevel; }
 		inline const OrthographicCameraBounds& GetBounds() const { return m_bounds; }
+
 	private:
 		bool OnMouseScrolled(MouseScrolledEvent& e);
 		bool OnWindowResized(WindowResizeEvent& e);
 		void RecalculateView();
+	
 	private:
 		bool m_rotation;
 		float m_aspectRatio;

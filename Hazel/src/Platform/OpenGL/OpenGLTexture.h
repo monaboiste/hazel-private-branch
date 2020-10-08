@@ -28,6 +28,7 @@ namespace Hazel {
 		{
 			return m_rendererID == ((OpenGLTexture2D&)other).m_rendererID;
 		}
+	
 	private:
 		uint32_t m_rendererID;
 		uint32_t m_width, m_height;

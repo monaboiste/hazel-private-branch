@@ -25,6 +25,7 @@ namespace Hazel {
 
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
+
 	private:
 		unsigned int m_width, m_height;
 	};

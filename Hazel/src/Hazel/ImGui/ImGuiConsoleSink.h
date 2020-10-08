@@ -10,12 +10,14 @@ namespace Hazel {
 	{
 	public:
 		explicit ImGuiConsoleSink(bool forceFlush = false, uint8_t bufferCapacity = 10)
-			: m_MessageBufferCapacity(forceFlush ? 1 : bufferCapacity), m_MessageBuffer(std::vector<Ref<ImGuiConsole::Message>>(forceFlush ? 1 : bufferCapacity))
+			: m_MessageBufferCapacity(forceFlush ? 1 : bufferCapacity)
+			, m_MessageBuffer(std::vector<Ref<ImGuiConsole::Message>>(forceFlush ? 1 : bufferCapacity))
 		{
 		}
 		ImGuiConsoleSink(const ImGuiConsoleSink&) = delete;
 		ImGuiConsoleSink& operator=(const ImGuiConsoleSink&) = delete;
 		virtual ~ImGuiConsoleSink() = default;
+
 	protected:
 		void sink_it_(const spdlog::details::log_msg& msg) override
 		{
@@ -33,6 +35,7 @@ namespace Hazel {
 				ImGuiConsole::AddMessage(message);
 			m_MessagesBuffered = 0;
 		}
+
 	private:
 		static ImGuiConsole::Message::Level GetMessageLevel(const spdlog::level::level_enum level)
 		{
@@ -48,6 +51,7 @@ namespace Hazel {
 			}
 			return ImGuiConsole::Message::Level::Invalid;
 		}
+
 	private:
 		uint8_t m_MessagesBuffered = 0;
 		uint8_t m_MessageBufferCapacity;

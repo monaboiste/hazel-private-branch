@@ -14,6 +14,7 @@ namespace Hazel {
 			None = 0,
 			OpenGL = 1
 		};
+
 	public:
 		virtual ~RendererAPI() = default;
 
@@ -27,6 +28,7 @@ namespace Hazel {
 		virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 
 		inline static API GetAPI() { return ms_API; }
+	
 	private:
 		static API ms_API;
 	};

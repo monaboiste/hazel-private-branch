@@ -50,6 +50,7 @@ namespace Hazel {
 		{
 			return GetCategoryFlags() & category;
 		}
+
 	public:
 		bool Handled = false;
 	};
@@ -73,6 +74,7 @@ namespace Hazel {
 			}
 			return false;
 		}
+
 	private:
 		Event& m_event;
 	};
