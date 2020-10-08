@@ -84,6 +84,7 @@ project "Hazel"
 
 	filter "system:windows"
 		systemversion "latest"
+		buildoptions "/experimental:external /external:I\"vendor\\entt\\include\" /external:I\"vendor\\spdlog\\include\" /external:W0"
 
 		defines
 		{
@@ -191,6 +192,7 @@ project "Hazelnut"
 
 	filter "system:windows"
 		systemversion "latest"
+		buildoptions "/experimental:external /external:I\"vendor\\entt\\include\" /external:I\"vendor\\spdlog\\include\" /external:W0"
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
