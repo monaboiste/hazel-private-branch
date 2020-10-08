@@ -37,6 +37,7 @@ project "Hazel"
 	language "C++"
     cppdialect "C++17"
 	staticruntime "on"
+	warnings "Default"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -161,6 +162,7 @@ project "Hazelnut"
 	language "C++"
     cppdialect "C++17"
 	staticruntime "on"
+	warnings "Default"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
