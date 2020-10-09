@@ -91,7 +91,7 @@ namespace Hazel {
 			{
 				auto& cameraComponent = entity.GetComponent<CameraComponent>();
 				auto& camera = cameraComponent.Camera;
-				
+
 				ImGui::Checkbox("Primary", &cameraComponent.Primary);
 
 				// Matches ProjectionType enum in SceneCamera class
@@ -148,6 +148,17 @@ namespace Hazel {
 				ImGui::TreePop();
 			}
 		}
+
+		if (entity.HasComponent<SpriteRendererComponent>())
+		{
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer Component"))
+			{
+				auto& src = entity.GetComponent<SpriteRendererComponent>();
+				ImGui::ColorEdit4("", glm::value_ptr(src.Color));
+				ImGui::TreePop();
+			}
+		}
+
 	}
 
 }

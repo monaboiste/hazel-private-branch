@@ -157,18 +157,7 @@ namespace Hazel {
 		ImGui::Text("Vertices:    %d", stats.GetTotalVertexCount());
 		ImGui::Text("Indices:     %d", stats.GetTotalIndexCount());
 
-
 		ImGui::End();
-
-		if (m_orangeSquareEntt)
-		{
-			auto& sprite = m_orangeSquareEntt.GetComponent<SpriteRendererComponent>();
-			auto& squareName = m_orangeSquareEntt.GetComponent<TagComponent>().Tag + " color";
-
-			ImGui::Begin(squareName.data());
-			ImGui::ColorPicker4("", glm::value_ptr(sprite.Color));
-			ImGui::End();
-		}
 
 		ImGui::Begin("Camera Switch Test");
 		{
