@@ -4,6 +4,9 @@
 #include "Hazel/Scene/Scene.h"
 #include "Hazel/Scene/Entity.h"
 
+#include <functional>
+#include <imgui/imgui.h>
+
 
 namespace Hazel {
 
@@ -19,6 +22,22 @@ namespace Hazel {
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
+
+		using ComponentSpecific = std::function<void()>;
+
+		template<typename T>
+		void DrawComponent(const std::string& label, Entity entity, ComponentSpecific drawUIFunc)
+		{
+			if (entity.HasComponent<T>())
+			{
+				if (ImGui::TreeNodeEx((void*)typeid(T).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, label.data()))
+				{
+					if (drawUIFunc != nullptr)
+						drawUIFunc();
+				}
+				ImGui::TreePop();
+			}
+		}
 
 	private:
 		Ref<Scene> m_context;
