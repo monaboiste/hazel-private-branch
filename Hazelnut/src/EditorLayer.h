@@ -1,7 +1,7 @@
 #pragma once
 #include <Hazel.h>
 
-#include "../Panels/SceneHierarchyPanel.h"
+#include "Panels/SceneHierarchyPanel.h"
 
 namespace Hazel {
 
