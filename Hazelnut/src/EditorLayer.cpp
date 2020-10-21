@@ -28,7 +28,7 @@ namespace Hazel {
 
 		m_greenSquareEntt = m_activeScene->CreateEntity("Square2");
 		m_greenSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(0.2f, 1.0f, 0.1f, 1.0f));
-		m_greenSquareEntt.GetComponent<TransformComponent>().Transform[3] += glm::vec4(3.0f, 0.5f, 0.0f, 0.0f);
+		m_greenSquareEntt.GetComponent<TransformComponent>().Translation += glm::vec3(3.0f, 0.5f, 0.0f);
 
 		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
 		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
@@ -43,18 +43,18 @@ namespace Hazel {
 			void OnDestroy() {}
 			void OnUpdate(Timestep ts)
 			{
-				glm::mat4& transform = GetComponent<TransformComponent>().Transform;
+				glm::vec3& translation = GetComponent<TransformComponent>().Translation;
 				const float kSpeed = 5.0f;
 
 				if (Input::IsKeyPressed(HZ_KEY_A))
-					transform[3][0] -= kSpeed * ts;
+					translation.x -= kSpeed * ts;
 				else if (Input::IsKeyPressed(HZ_KEY_D))
-					transform[3][0] += kSpeed * ts;
+					translation.x += kSpeed * ts;
 
 				if (Input::IsKeyPressed(HZ_KEY_W))
-					transform[3][1] += kSpeed * ts;
+					translation.y += kSpeed * ts;
 				else if (Input::IsKeyPressed(HZ_KEY_S))
-					transform[3][1] -= kSpeed * ts;
+					translation.y -= kSpeed * ts;
 			}
 		};
 
