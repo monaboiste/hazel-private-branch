@@ -159,24 +159,6 @@ namespace Hazel {
 
 		ImGui::End();
 
-		ImGui::Begin("Camera Switch Test");
-		{
-			std::string& tag = m_mainCameraEntt.GetComponent<TagComponent>().Tag;
-			if (ImGui::Checkbox(tag.data(), &m_primaryCamera))
-			{
-				m_mainCameraEntt.GetComponent<CameraComponent>().Primary = m_primaryCamera;
-				m_secondCameraEntt.GetComponent<CameraComponent>().Primary = !m_primaryCamera;
-			}
-		
-			auto& mainCamera = m_mainCameraEntt.GetComponent<CameraComponent>().Camera;
-			float orthoSize = mainCamera.GetOrthographicSize();
-
-			std::string tagOrthoSize = tag;
-			if (ImGui::DragFloat(tagOrthoSize.append(" orthosize").data(), &orthoSize, 0.5f, 1.0f, 20.0f))
-				mainCamera.SetOrthographicSize(orthoSize);
-		}
-		ImGui::End();
-
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 

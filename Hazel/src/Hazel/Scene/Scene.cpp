@@ -95,4 +95,33 @@ namespace Hazel {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_registry.destroy(entity);
+	}
+
+	// ------
+	template <typename T>
+	void Scene::OnComponentAdded(Entity, T& component)
+	{
+		HZ_ASSERT(false, "Default specialization is forbidden!");
+	}
+
+	template <>
+	void Scene::OnComponentAdded<TagComponent>(Entity, TagComponent& component) {}
+
+	template <>
+	void Scene::OnComponentAdded<TransformComponent>(Entity, TransformComponent& component) {}
+
+	template <>
+	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity, SpriteRendererComponent& component) {}
+
+	template <>
+	void Scene::OnComponentAdded<CameraComponent>(Entity, CameraComponent& component)
+	{
+		component.Camera.SetViewportSize(m_viewportWidth, m_viewportHeight);
+	}
+
+	template <>
+	void Scene::OnComponentAdded<NativeScriptComponent>(Entity, NativeScriptComponent& component) {}
 }

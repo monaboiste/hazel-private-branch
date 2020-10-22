@@ -8,6 +8,15 @@
 
 namespace Hazel {
 
+	struct TagComponent
+	{
+		std::string Tag;
+
+		TagComponent() = default;
+		TagComponent(const std::string& tag)
+			: Tag(tag) {}
+		TagComponent(const TagComponent&) = default;
+	};
 
 	struct TransformComponent
 	{
@@ -32,16 +41,6 @@ namespace Hazel {
 		}
 	};
 
-	struct TagComponent
-	{
-		std::string Tag;
-
-		TagComponent() = default;
-		TagComponent(const std::string& tag)
-			: Tag(tag) {}
-		TagComponent(const TagComponent&) = default;
-	};
-
 	struct SpriteRendererComponent
 	{
 		glm::vec4 Color = glm::vec4(1.0f);
@@ -55,7 +54,7 @@ namespace Hazel {
 	struct CameraComponent
 	{
 		SceneCamera Camera;
-		bool Primary = false;
+		bool Primary = true;
 		bool FixedAspectRatio = false;
 
 		CameraComponent() = default;
