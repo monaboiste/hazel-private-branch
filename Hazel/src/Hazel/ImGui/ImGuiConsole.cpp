@@ -57,7 +57,7 @@ namespace Hazel {
 		const float spacing = style.ItemInnerSpacing.x;
 
 		// Text change level
-		ImGui::AlignFirstTextHeightToWidgets();
+		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Display");
 
 		ImGui::SameLine(0.0f, 2.0f * spacing);
@@ -109,7 +109,7 @@ namespace Hazel {
 		const float maxWidth = ImGui::CalcTextSize("Scroll to bottom").x * 1.1f;
 		const float spacing = ImGui::GetStyle().ItemInnerSpacing.x + ImGui::CalcTextSize(" ").x;
 
-		ImGui::AlignFirstTextHeightToWidgets();
+		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Scroll to bottom");
 		ImGui::SameLine(0.0f, spacing + maxWidth - ImGui::CalcTextSize("Scroll to bottom").x);
 		ImGui::Checkbox("##ScrollToBottom", &ms_allowScrollingToBottom);
@@ -122,7 +122,7 @@ namespace Hazel {
 			ImGuiConsole::Clear();
 
 		// Slider for font scale
-		ImGui::AlignFirstTextHeightToWidgets();
+		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Display scale");
 		ImGui::SameLine(0.0f, spacing + maxWidth - ImGui::CalcTextSize("Display scale").x);
 		ImGui::PushItemWidth(maxWidth * 1.25f / 1.1f);

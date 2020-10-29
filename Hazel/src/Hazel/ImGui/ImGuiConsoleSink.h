@@ -21,8 +21,8 @@ namespace Hazel {
 	protected:
 		void sink_it_(const spdlog::details::log_msg& msg) override
 		{
-			fmt::memory_buffer formatted;
-			sink::formatter_->format(msg, formatted);
+			spdlog::memory_buf_t formatted;
+			formatter_->format(msg, formatted);
 
 			*(m_MessageBuffer.begin() + m_MessagesBuffered) = std::make_shared<ImGuiConsole::Message>(fmt::to_string(formatted), GetMessageLevel(msg.level));
 			if (++m_MessagesBuffered == m_MessageBufferCapacity)
