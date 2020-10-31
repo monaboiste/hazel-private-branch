@@ -1,6 +1,6 @@
 workspace "Hazel"
 	architecture "x64"
-	startproject "Sandbox"
+	startproject "Hazelnut"
 
 	configurations
 	{
@@ -35,7 +35,7 @@ project "Hazel"
 	location "Hazel"
 	kind "StaticLib"
 	language "C++"
-    cppdialect "C++17"
+	cppdialect "C++17"
 	staticruntime "on"
 	warnings "Default"
 
@@ -69,10 +69,10 @@ project "Hazel"
 		"%{IncludeDir.entt}"
 	}
 
-    defines
-    {
-        "_CRT_SECURE_NO_WARNINGS"
-    }
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
+	}
 
 	links
 	{
@@ -111,7 +111,7 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-    cppdialect "C++17"
+	cppdialect "C++17"
 	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -161,7 +161,7 @@ project "Hazelnut"
 	location "Hazelnut"
 	kind "ConsoleApp"
 	language "C++"
-    cppdialect "C++17"
+	cppdialect "C++17"
 	staticruntime "on"
 	warnings "Default"
 

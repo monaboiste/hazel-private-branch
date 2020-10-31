@@ -14,5 +14,7 @@ Visual Studio 2017 or 2019 is recommended, Hazel is officially untested on other
 Clone the repository with `git clone --recursive https://github.com/monaboiste/hazel-private-branch.git`.
 
 If the repository was cloned non-recursively previously, use `git submodule update --init` to clone the necessary submodules.
-  
+
 In order to generate VS solution run `win-genproj.bat` inside scripts folder.
+
+*Note: Hazelnut is temporary used as test playground, so it MUST be mark as startup project. Sandbox app is unused for the time being.*
