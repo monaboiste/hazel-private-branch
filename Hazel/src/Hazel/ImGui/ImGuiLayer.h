@@ -24,6 +24,9 @@ namespace Hazel {
 		void End();
 
 	private:
+		void SetDarkTheme();
+
+	private:
 		float m_time = 0.0f;
 		bool m_blockImGuiEvent = true;
 	};

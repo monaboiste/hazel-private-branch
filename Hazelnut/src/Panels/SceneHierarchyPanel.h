@@ -23,25 +23,31 @@ namespace Hazel {
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
 
-		using ComponentSpecific = std::function<void()>;
-
-		template<typename T>
-		void DrawComponent(const std::string& label, Entity entity, ComponentSpecific drawUIFunc = nullptr)
+		template<typename T, typename UIFunction>
+		void DrawComponent(const std::string& label, Entity entity, UIFunction drawUIFunc)
 		{
 			if (entity.HasComponent<T>())
 			{
+				auto& component = entity.GetComponent<T>();
 
-				const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+				const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | 
+					ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_SpanAvailWidth | 
+					ImGuiTreeNodeFlags_AllowItemOverlap | ImGuiTreeNodeFlags_FramePadding;
 
+				float available = ImGui::GetContentRegionAvailWidth();
+
+				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4,4 });
+				float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+				ImGui::Separator();
 				bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, label.data());
+				ImGui::PopStyleVar();
 
-				ImGui::SameLine(ImGui::GetWindowWidth() - 45.0f);
-				if (ImGui::Button("+", { 20, 20 }))
+				ImGui::SameLine(available - lineHeight * 0.5f);
+				if (ImGui::Button("...", { lineHeight, lineHeight }))
 					ImGui::OpenPopup("ComponentSettings");
 
 				bool deleteComponent = false;
 
-				ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4,4 });
 				if (ImGui::BeginPopup("ComponentSettings"))
 				{
 					if (ImGui::MenuItem("Remove Component"))
@@ -49,13 +55,9 @@ namespace Hazel {
 
 					ImGui::EndPopup();
 				}
-				ImGui::PopStyleVar();
 
 				if (open)
-				{
-					if (drawUIFunc != nullptr)
-						drawUIFunc();
-				}
+					drawUIFunc(component);
 
 				if (deleteComponent)
 					entity.RemoveComponent<T>();

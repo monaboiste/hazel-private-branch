@@ -30,11 +30,11 @@ namespace Hazel {
 		m_greenSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(0.2f, 1.0f, 0.1f, 1.0f));
 		m_greenSquareEntt.GetComponent<TransformComponent>().Translation += glm::vec3(3.0f, 0.5f, 0.0f);
 
-		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
-		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
-
 		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
 		m_secondCameraEntt.AddComponent<CameraComponent>();
+
+		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
+		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
 
 		class CameraController : public ScriptableEntity
 		{
@@ -129,11 +129,16 @@ namespace Hazel {
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
+		
+		ImGuiStyle& style = ImGui::GetStyle();
+		float defaultMinWidth = style.WindowMinSize.x;
+		style.WindowMinSize.x = 385.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
 		{
 			ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
 			ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
 		}
+		style.WindowMinSize.x = defaultMinWidth;
 
 		if (ImGui::BeginMenuBar())
 		{
