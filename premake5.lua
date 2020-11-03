@@ -18,17 +18,19 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
-IncludeDir["GLFW"] = "Hazel/vendor/GLFW/include"
-IncludeDir["Glad"] = "Hazel/vendor/Glad/include"
-IncludeDir["ImGui"] = "Hazel/vendor/imgui"
-IncludeDir["glm"] = "Hazel/vendor/glm"
-IncludeDir["stb"] = "Hazel/vendor/stb"
-IncludeDir["entt"] = "Hazel/vendor/entt/include"
+IncludeDir["GLFW"] = "Hazel/Vendor/GLFW/include"
+IncludeDir["Glad"] = "Hazel/Vendor/Glad/include"
+IncludeDir["ImGui"] = "Hazel/Vendor/imgui"
+IncludeDir["glm"] = "Hazel/Vendor/glm"
+IncludeDir["stb"] = "Hazel/Vendor/stb"
+IncludeDir["entt"] = "Hazel/Vendor/entt/include"
+IncludeDir["yaml"] = "Hazel/Vendor/yaml-cpp/include"
 
 group "Dependencies"
-	include "Hazel/vendor/GLFW"
-	include "Hazel/vendor/Glad"
-	include "Hazel/vendor/imgui"
+	include "Hazel/Vendor/GLFW"
+	include "Hazel/Vendor/Glad"
+	include "Hazel/Vendor/imgui"
+	include "Hazel/Vendor/yaml-cpp"
 group ""
 
 project "Hazel"
@@ -39,34 +41,35 @@ project "Hazel"
 	staticruntime "on"
 	warnings "Default"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("Bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("Bin-Int/" .. outputdir .. "/%{prj.name}")
 
 	pchheader "hzpch.h"
-	pchsource "Hazel/src/hzpch.cpp"
+	pchsource "Hazel/Src/hzpch.cpp"
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/Src/**.h",
+		"%{prj.name}/Src/**.cpp",
 
-		"%{prj.name}/vendor/stb/**.h",
-		"%{prj.name}/vendor/stb/**.cpp",
+		"%{prj.name}/Vendor/stb/**.h",
+		"%{prj.name}/Vendor/stb/**.cpp",
 		
-		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/Vendor/glm/glm/**.hpp",
+		"%{prj.name}/Vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
-		"%{prj.name}/src",
-		"%{prj.name}/vendor/spdlog/include",
+		"%{prj.name}/Src",
+		"%{prj.name}/Vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
+		"%{IncludeDir.yaml}"
 	}
 
 	defines
@@ -79,12 +82,13 @@ project "Hazel"
 		"GLFW",
 		"Glad",
 		"ImGui",
+		"yaml-cpp",
 		"opengl32.lib"
 	}
 
 	filter "system:windows"
 		systemversion "latest"
-		buildoptions "/experimental:external /external:I\"vendor\\entt\\include\" /external:I\"vendor\\spdlog\\include\" /external:W0"
+		buildoptions "/experimental:external /external:I\"Vendor\\entt\\include\" /external:I\"Vendor\\spdlog\\include\" /external:W0"
 
 		defines
 		{
@@ -114,22 +118,22 @@ project "Sandbox"
 	cppdialect "C++17"
 	staticruntime "on"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("Bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("Bin-Int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/Src/**.h",
+		"%{prj.name}/Src/**.cpp",
+		"%{prj.name}/Vendor/glm/glm/**.hpp",
+		"%{prj.name}/Vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
+		"Hazel/Vendor/spdlog/include",
+		"Hazel/Src",
+		"Hazel/Vendor",
 		"%{IncludeDir.glm}"
 	}
 
@@ -165,24 +169,24 @@ project "Hazelnut"
 	staticruntime "on"
 	warnings "Default"
 
-	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+	targetdir ("Bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("Bin-Int/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp",
-		"%{prj.name}/vendor/glm/glm/**.hpp",
-		"%{prj.name}/vendor/glm/glm/**.inl"
+		"%{prj.name}/Src/**.h",
+		"%{prj.name}/Src/**.cpp",
+		"%{prj.name}/Vendor/glm/glm/**.hpp",
+		"%{prj.name}/Vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
-		"Hazel/vendor/spdlog/include",
-		"Hazel/src",
-		"Hazel/vendor",
+		"Hazel/Vendor/spdlog/include",
+		"Hazel/Src",
+		"Hazel/Vendor",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.entt}"
+		"%{IncludeDir.entt}",
 	}
 
 	links
@@ -192,7 +196,7 @@ project "Hazelnut"
 
 	filter "system:windows"
 		systemversion "latest"
-		buildoptions "/experimental:external /external:I\"vendor\\entt\\include\" /external:I\"vendor\\spdlog\\include\" /external:W0"
+		buildoptions "/experimental:external /external:I\"Vendor\\entt\\include\" /external:I\"Vendor\\spdlog\\include\" /external:W0"
 
 	filter "configurations:Debug"
 		defines "HZ_DEBUG"
