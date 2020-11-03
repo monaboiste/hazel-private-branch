@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/monaboiste/hazel-private-branch/blob/master/LICENSE)
 
 <p align="center">
-	<img src="branding/hazel_logo.png" width="400">
+	<img src="Branding/hazel_logo.png" width="400">
 </p>
 
 Hazel is primarily an early-stage interactive application and rendering engine for Windows. Repository is basically one-to-one copy of [TheCherno's](https://github.com/TheCherno/Hazel) with little tweaks there and there.

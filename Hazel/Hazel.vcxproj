@@ -186,6 +186,7 @@
     <ClInclude Include="Src\Hazel\Scene\Entity.h" />
     <ClInclude Include="Src\Hazel\Scene\Scene.h" />
     <ClInclude Include="Src\Hazel\Scene\SceneCamera.h" />
+    <ClInclude Include="Src\Hazel\Scene\SceneSerializer.h" />
     <ClInclude Include="Src\Hazel\Scene\ScriptableEntity.h" />
     <ClInclude Include="Src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="Src\Platform\OpenGL\OpenGLContext.h" />
@@ -628,6 +629,7 @@
     <ClCompile Include="Src\Hazel\Scene\Entity.cpp" />
     <ClCompile Include="Src\Hazel\Scene\Scene.cpp" />
     <ClCompile Include="Src\Hazel\Scene\SceneCamera.cpp" />
+    <ClCompile Include="Src\Hazel\Scene\SceneSerializer.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLFramebuffer.cpp" />

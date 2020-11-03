@@ -12,11 +12,6 @@
 #include "Hazel\Core\KeyCodes.h"
 #include "Hazel\Core\MouseButtonCodes.h"
 
-#include "Hazel\Scene\Scene.h"
-#include "Hazel\Scene\Component.h"
-#include "Hazel\Scene\Entity.h"
-#include "Hazel\Scene\ScriptableEntity.h"
-
 // ---Renderer------------------------
 #include "Hazel\Renderer\Renderer2D.h"
 #include "Hazel\Renderer\Renderer.h"
@@ -32,6 +27,13 @@
 #include "Hazel\Renderer\OrthographicCameraController.h"
 #include "Hazel\Renderer\OrthographicCamera.h"
 
-// ---ImGui Console and Debug----------
+// ---Scene--------------------------
+#include "Hazel\Scene\Scene.h"
+#include "Hazel\Scene\SceneSerializer.h"
+#include "Hazel\Scene\Component.h"
+#include "Hazel\Scene\Entity.h"
+#include "Hazel\Scene\ScriptableEntity.h"
+
+// ---ImGui Console and Debug---------
 #include "Hazel\ImGui\ImGuiConsole.h"
 #include "Hazel\Debug\Instrumentor.h"

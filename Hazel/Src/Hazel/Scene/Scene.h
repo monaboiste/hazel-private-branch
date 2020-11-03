@@ -10,9 +10,10 @@ namespace Hazel {
 	class Scene
 	{
 		friend class Entity;
+		friend class SceneSerializer;
 		friend class SceneHierarchyPanel;
 	public:
-		Scene();
+		Scene(const std::string& name = "Untitled");
 		~Scene();
 		
 		void OnUpdate(Timestep ts);
@@ -26,6 +27,7 @@ namespace Hazel {
 		void OnComponentAdded(Entity, T& component);
 
 	private:
+		std::string m_name;
 		entt::registry m_registry;
 		uint32_t m_viewportWidth = 0, m_viewportHeight = 0;
 	};

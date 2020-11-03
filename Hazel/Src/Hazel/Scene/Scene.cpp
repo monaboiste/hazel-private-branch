@@ -10,7 +10,8 @@
 namespace Hazel {
 
 
-	Scene::Scene()
+	Scene::Scene(const std::string& name)
+		: m_name(name)
 	{
 	}
 
@@ -104,7 +105,7 @@ namespace Hazel {
 	template <typename T>
 	void Scene::OnComponentAdded(Entity, T& component)
 	{
-		HZ_ASSERT(false, "Default specialization is forbidden!");
+		HZ_CORE_ASSERT(false, "Default specialization is forbidden!");
 	}
 
 	template <>
