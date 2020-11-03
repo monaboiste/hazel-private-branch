@@ -12,3 +12,6 @@
 	path = hazel/vendor/imgui
 	url = https://github.com/TheCherno/imgui.git
 	branch = docking
+[submodule "Hazel/Vendor/yaml-cpp"]
+	path = Hazel/Vendor/yaml-cpp
+	url = https://github.com/TheCherno/yaml-cpp
