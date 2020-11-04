@@ -31,7 +31,7 @@ namespace Hazel {
 		m_greenSquareEntt.GetComponent<TransformComponent>().Translation += glm::vec3(3.0f, 0.5f, 0.0f);
 
 		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
-		m_secondCameraEntt.AddComponent<CameraComponent>();
+		m_secondCameraEntt.AddComponent<CameraComponent>().Primary = false;
 
 		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
 		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
@@ -61,10 +61,6 @@ namespace Hazel {
 		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_scenePanel.SetContext(m_activeScene);
-
-		SceneSerializer serializer(m_activeScene);
-		serializer.Serialize("Assets/Scenes/scene.hazel");
-		//serializer.Dserialize("Assets/Scenes/scene.hazel");
 	}
 
 	void EditorLayer::OnDetach()
@@ -133,7 +129,7 @@ namespace Hazel {
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
-		
+
 		ImGuiStyle& style = ImGui::GetStyle();
 		float defaultMinWidth = style.WindowMinSize.x;
 		style.WindowMinSize.x = 385.0f;
@@ -148,6 +144,35 @@ namespace Hazel {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+				{
+					m_activeScene = CreateRef<Scene>();
+					m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+					m_scenePanel.SetContext(m_activeScene);
+				}
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+				{
+					auto filename = FileDialog::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
+					if (filename)
+					{
+						// @NOTE: Deserialized scene doesn't contain scripts binded to entities
+
+						m_activeScene = CreateRef<Scene>();
+						m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+						m_scenePanel.SetContext(m_activeScene);
+						SceneSerializer serializer(m_activeScene);
+						serializer.Deserialize(*filename);
+					}
+				}
+				if (ImGui::MenuItem("Save As...", "Ctrl+S"))
+				{
+					auto filename = FileDialog::SaveFile("Hazel Scene (*.hazel)\0*.hazel\0");
+					if (filename)
+					{
+						SceneSerializer serializer(m_activeScene);
+						serializer.Serialize(*filename);
+					}
+				}
 				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
 				ImGui::EndMenu();

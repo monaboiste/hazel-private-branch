@@ -4,7 +4,7 @@ Entities:
     TagComponent:
       Tag: Main Camera
     TransformComponent:
-      Translation: [0, 0, 0]
+      Translation: [1, 0.400000006, 0]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     CameraComponent:
@@ -13,7 +13,7 @@ Entities:
         PerspectiveVertivalFOV: 0.785398185
         PerspectiveNearClip: 0.00999999978
         PerspectiveFarClip: 1000
-        OrthographicSize: 10
+        OrthographicSize: 7.75
         OrthographicNearClip: -1
         OrthographicFarClip: 1
       Primary: true
@@ -24,7 +24,7 @@ Entities:
     TransformComponent:
       Translation: [0, 0, 0]
       Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
+      Scale: [0.899999976, 1, 1]
     CameraComponent:
       Camera:
         ProjectionType: 1

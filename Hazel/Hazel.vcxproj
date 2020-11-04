@@ -188,6 +188,7 @@
     <ClInclude Include="Src\Hazel\Scene\SceneCamera.h" />
     <ClInclude Include="Src\Hazel\Scene\SceneSerializer.h" />
     <ClInclude Include="Src\Hazel\Scene\ScriptableEntity.h" />
+    <ClInclude Include="Src\Hazel\Utils\PlatformUtils.h" />
     <ClInclude Include="Src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="Src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="Src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -637,6 +638,7 @@
     <ClCompile Include="Src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="Src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="Src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="Src\hzpch.cpp">

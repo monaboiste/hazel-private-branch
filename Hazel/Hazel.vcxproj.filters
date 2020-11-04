@@ -58,6 +58,9 @@
     <Filter Include="Vendor\stb">
       <UniqueIdentifier>{6BAF7327-5767-B574-C06E-8ED0AC455065}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Hazel\Utils">
+      <UniqueIdentifier>{21dc91b5-70fe-403b-904b-8c899cf81b69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Hazel.h">
@@ -175,6 +178,9 @@
       <Filter>Src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Src\Hazel\Scene\SceneCamera.h">
+      <Filter>Src\Hazel\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Hazel\Scene\SceneSerializer.h">
       <Filter>Src\Hazel\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Src\Hazel\Scene\ScriptableEntity.h">
@@ -1434,7 +1440,9 @@
     <ClInclude Include="Vendor\stb\stb_image.h">
       <Filter>Vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Hazel\Scene\SceneSerializer.h" />
+    <ClInclude Include="Src\Hazel\Utils\PlatformUtils.h">
+      <Filter>Src\Hazel\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Hazel\Core\Application.cpp">
@@ -1500,6 +1508,9 @@
     <ClCompile Include="Src\Hazel\Scene\SceneCamera.cpp">
       <Filter>Src\Hazel\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Hazel\Scene\SceneSerializer.cpp">
+      <Filter>Src\Hazel\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>Src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1533,6 +1544,6 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp">
       <Filter>Vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Hazel\Scene\SceneSerializer.cpp" />
+    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp" />
   </ItemGroup>
 </Project>
