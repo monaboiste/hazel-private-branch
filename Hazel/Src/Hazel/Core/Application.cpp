@@ -8,7 +8,7 @@
 
 namespace Hazel {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1)
+#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...);}
 
 	Application* Application::ms_instance = nullptr;
 
@@ -45,9 +45,9 @@ namespace Hazel {
 
 		for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); it++)
 		{
-			(*it)->OnEvent(e);
 			if (e.Handled)
 				break;
+			(*it)->OnEvent(e);
 		}
 	}
 
@@ -56,7 +56,7 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		m_layerStack.PushLayer(layer);
-		// layer->OnAttach();		//-- imgui broken
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
@@ -64,7 +64,7 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		m_layerStack.PushOverlay(layer);
-		// layer->OnAttach();		//-- imgui broken
+		layer->OnAttach();
 	}
 
 	void Application::Run()
@@ -88,11 +88,11 @@ namespace Hazel {
 			}
 
 			m_imguiLayer->Begin();
-			for (Layer* layer : m_layerStack)
 			{
 				HZ_PROFILE_SCOPE("LayerStack OnImGuiRender");
 
-				layer->OnImGuiRender();
+				for (Layer* layer : m_layerStack)
+					layer->OnImGuiRender();
 			}
 			m_imguiLayer->End();
 
