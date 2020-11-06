@@ -19,6 +19,14 @@ namespace Hazel {
 		virtual void OnEvent(Event& e) override;
 
 	private:
+		bool OnKeyPressed(KeyPressedEvent& e);
+		
+		// Dialogs
+		void NewScene();
+		void OpenFileScene();
+		void SaveFileSceneAs();
+
+	private:
 		Ref<FrameBuffer> m_frameBuffer;
 
 		glm::vec2 m_viewportSize = { 1080.0f, 720.0f };

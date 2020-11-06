@@ -613,6 +613,7 @@
     <ClCompile Include="Src\Hazel\Core\Layer.cpp" />
     <ClCompile Include="Src\Hazel\Core\LayerStack.cpp" />
     <ClCompile Include="Src\Hazel\Core\Log.cpp" />
+    <ClCompile Include="Src\Hazel\Core\Window.cpp" />
     <ClCompile Include="Src\Hazel\ImGui\ImGuiConsole.cpp" />
     <ClCompile Include="Src\Hazel\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="Src\Hazel\Renderer\Buffer.cpp" />
@@ -638,8 +639,8 @@
     <ClCompile Include="Src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="Src\Platform\OpenGL\OpenGLVertexArray.cpp" />
-    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="Src\Platform\Windows\WindowsInput.cpp" />
+    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp" />
     <ClCompile Include="Src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="Src\hzpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

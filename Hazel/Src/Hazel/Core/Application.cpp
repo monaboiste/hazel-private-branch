@@ -1,14 +1,13 @@
 #include "hzpch.h"
 #include "Application.h"
 
+#include "Hazel\Core\Core.h"
 #include "Hazel\Core\Input.h"
 #include "Hazel\Renderer\Renderer.h"
 
 #include <GLFW\glfw3.h>
 
 namespace Hazel {
-
-#define BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...);}
 
 	Application* Application::ms_instance = nullptr;
 
@@ -18,8 +17,8 @@ namespace Hazel {
 		HZ_CORE_ASSERT(!ms_instance, "Application already exist!");
 		ms_instance = this;
 
-		m_window = std::unique_ptr<Window>(Window::Create(WindowProps(name)));
-		m_window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_window = Window::Create(WindowProps(name));
+		m_window->SetEventCallback(HZ_BIND_EVENT_FN(Application::OnEvent));
 
 		Renderer::Init();
 
@@ -40,8 +39,8 @@ namespace Hazel {
 		HZ_PROFILE_FUNCTION();
 
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		dispatcher.Dispatch<WindowResizeEvent>(BIND_EVENT_FN(OnWindowResize));
+		dispatcher.Dispatch<WindowCloseEvent>(HZ_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(HZ_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_layerStack.rbegin(); it != m_layerStack.rend(); it++)
 		{

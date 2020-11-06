@@ -122,4 +122,12 @@
 #define HZ_KEY_RIGHT_CONTROL      345
 #define HZ_KEY_RIGHT_ALT          346
 #define HZ_KEY_RIGHT_SUPER        347
-#define HZ_KEY_MENU               348 
+#define HZ_KEY_MENU               348
+
+/* Modifiers */
+#define HZ_MOD_SHIFT              0x0001
+#define HZ_MOD_CONTROL            0x0002
+#define HZ_MOD_ALT                0x0004
+#define HZ_MOD_SUPER              0x0008
+#define HZ_MOD_CAPS_LOCK          0x0010
+#define HZ_MOD_NUM_LOCK           0x0020

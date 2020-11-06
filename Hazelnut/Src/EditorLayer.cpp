@@ -145,36 +145,14 @@ namespace Hazel {
 			if (ImGui::BeginMenu("File"))
 			{
 				if (ImGui::MenuItem("New", "Ctrl+N"))
-				{
-					m_activeScene = CreateRef<Scene>();
-					m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-					m_scenePanel.SetContext(m_activeScene);
-				}
+					NewScene();
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-				{
-					auto filename = FileDialog::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
-					if (filename)
-					{
-						// @NOTE: Deserialized scene doesn't contain scripts binded to entities
-
-						m_activeScene = CreateRef<Scene>();
-						m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
-						m_scenePanel.SetContext(m_activeScene);
-						SceneSerializer serializer(m_activeScene);
-						serializer.Deserialize(*filename);
-					}
-				}
+					OpenFileScene();
 				if (ImGui::MenuItem("Save As...", "Ctrl+S"))
-				{
-					auto filename = FileDialog::SaveFile("Hazel Scene (*.hazel)\0*.hazel\0");
-					if (filename)
-					{
-						SceneSerializer serializer(m_activeScene);
-						serializer.Serialize(*filename);
-					}
-				}
+					SaveFileSceneAs();
 				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -213,6 +191,57 @@ namespace Hazel {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
+		// Don't allow imgui to block events, let propagate to EditorLayer.
+		// Shortcuts are always available.
+		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(false);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
+
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		switch (e.GetKeyCode())
+		{
+		case (HZ_MOD_CONTROL | HZ_KEY_N): NewScene(); break;
+		case (HZ_MOD_CONTROL | HZ_KEY_O): OpenFileScene(); break;
+		case (HZ_MOD_CONTROL | HZ_KEY_S): SaveFileSceneAs(); break;
+		default: break;
+		}
+		return true;
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_activeScene = CreateRef<Scene>();
+		m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		m_scenePanel.SetContext(m_activeScene);
+	}
+
+	void EditorLayer::OpenFileScene()
+	{
+		auto filename = FileDialog::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
+		if (filename)
+		{
+			// @NOTE: Deserialized scene doesn't contain scripts binded to entities
+
+			m_activeScene = CreateRef<Scene>();
+			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_scenePanel.SetContext(m_activeScene);
+			SceneSerializer serializer(m_activeScene);
+			serializer.Deserialize(*filename);
+		}
+	}
+
+	void EditorLayer::SaveFileSceneAs()
+	{
+		auto filename = FileDialog::SaveFile("Hazel Scene (*.hazel)\0*.hazel\0");
+		if (filename)
+		{
+			SceneSerializer serializer(m_activeScene);
+			serializer.Serialize(*filename);
+		}
 	}
 
 }

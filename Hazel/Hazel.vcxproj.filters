@@ -25,6 +25,9 @@
     <Filter Include="Src\Hazel\Scene">
       <UniqueIdentifier>{ED20FB4A-59AC-680F-62BD-EB03CEC7C40F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Hazel\Utils">
+      <UniqueIdentifier>{30B5284B-9C40-960F-A551-1904115CF20F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Src\Platform">
       <UniqueIdentifier>{011E97C6-ED80-266B-9606-5F218248F2ED}</UniqueIdentifier>
     </Filter>
@@ -57,9 +60,6 @@
     </Filter>
     <Filter Include="Vendor\stb">
       <UniqueIdentifier>{6BAF7327-5767-B574-C06E-8ED0AC455065}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Hazel\Utils">
-      <UniqueIdentifier>{21dc91b5-70fe-403b-904b-8c899cf81b69}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +185,9 @@
     </ClInclude>
     <ClInclude Include="Src\Hazel\Scene\ScriptableEntity.h">
       <Filter>Src\Hazel\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Hazel\Utils\PlatformUtils.h">
+      <Filter>Src\Hazel\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>Src\Platform\OpenGL</Filter>
@@ -1440,9 +1443,6 @@
     <ClInclude Include="Vendor\stb\stb_image.h">
       <Filter>Vendor\stb</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Hazel\Utils\PlatformUtils.h">
-      <Filter>Src\Hazel\Utils</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Src\Hazel\Core\Application.cpp">
@@ -1535,6 +1535,9 @@
     <ClCompile Include="Src\Platform\Windows\WindowsInput.cpp">
       <Filter>Src\Platform\Windows</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp">
+      <Filter>Src\Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Platform\Windows\WindowsWindow.cpp">
       <Filter>Src\Platform\Windows</Filter>
     </ClCompile>
@@ -1544,6 +1547,6 @@
     <ClCompile Include="Vendor\stb\stb_image.cpp">
       <Filter>Vendor\stb</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Platform\Windows\WindowsPlatformUtils.cpp" />
+    <ClCompile Include="Src\Hazel\Core\Window.cpp" />
   </ItemGroup>
 </Project>
