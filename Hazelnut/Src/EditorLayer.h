@@ -23,8 +23,8 @@ namespace Hazel {
 		
 		// Dialogs
 		void NewScene();
-		void OpenFileScene();
-		void SaveFileSceneAs();
+		void OpenSceneFile();
+		void SaveSceneFileAs();
 
 	private:
 		Ref<FrameBuffer> m_frameBuffer;

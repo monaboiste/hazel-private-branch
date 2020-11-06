@@ -46,14 +46,14 @@ namespace Hazel {
 				glm::vec3& translation = GetComponent<TransformComponent>().Translation;
 				const float kSpeed = 5.0f;
 
-				if (Input::IsKeyPressed(HZ_KEY_A))
+				if (Input::IsKeyPressed(Key::A))
 					translation.x -= kSpeed * ts;
-				else if (Input::IsKeyPressed(HZ_KEY_D))
+				else if (Input::IsKeyPressed(Key::D))
 					translation.x += kSpeed * ts;
 
-				if (Input::IsKeyPressed(HZ_KEY_W))
+				if (Input::IsKeyPressed(Key::W))
 					translation.y += kSpeed * ts;
-				else if (Input::IsKeyPressed(HZ_KEY_S))
+				else if (Input::IsKeyPressed(Key::S))
 					translation.y -= kSpeed * ts;
 			}
 		};
@@ -147,9 +147,9 @@ namespace Hazel {
 				if (ImGui::MenuItem("New", "Ctrl+N"))
 					NewScene();
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-					OpenFileScene();
+					OpenSceneFile();
 				if (ImGui::MenuItem("Save As...", "Ctrl+S"))
-					SaveFileSceneAs();
+					SaveSceneFileAs();
 				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
 
@@ -202,12 +202,24 @@ namespace Hazel {
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
+		bool controlHolded = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
 		switch (e.GetKeyCode())
 		{
-		case (HZ_MOD_CONTROL | HZ_KEY_N): NewScene(); break;
-		case (HZ_MOD_CONTROL | HZ_KEY_O): OpenFileScene(); break;
-		case (HZ_MOD_CONTROL | HZ_KEY_S): SaveFileSceneAs(); break;
-		default: break;
+		case Key::N:
+		{
+			if (controlHolded)
+				NewScene();
+		}; break;
+		case Key::O:
+		{
+			if (controlHolded)
+				OpenSceneFile();
+		}; break;
+		case Key::S:
+		{
+			if (controlHolded)
+				SaveSceneFileAs();
+		}; break;
 		}
 		return true;
 	}
@@ -219,7 +231,7 @@ namespace Hazel {
 		m_scenePanel.SetContext(m_activeScene);
 	}
 
-	void EditorLayer::OpenFileScene()
+	void EditorLayer::OpenSceneFile()
 	{
 		auto filename = FileDialog::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
 		if (filename)
@@ -234,7 +246,7 @@ namespace Hazel {
 		}
 	}
 
-	void EditorLayer::SaveFileSceneAs()
+	void EditorLayer::SaveSceneFileAs()
 	{
 		auto filename = FileDialog::SaveFile("Hazel Scene (*.hazel)\0*.hazel\0");
 		if (filename)
