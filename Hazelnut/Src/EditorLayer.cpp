@@ -31,7 +31,7 @@ namespace Hazel {
 		m_greenSquareEntt.GetComponent<TransformComponent>().Translation += glm::vec3(3.0f, 0.5f, 0.0f);
 
 		m_secondCameraEntt = m_activeScene->CreateEntity("Second Camera");
-		m_secondCameraEntt.AddComponent<CameraComponent>();
+		m_secondCameraEntt.AddComponent<CameraComponent>().Primary = false;
 
 		m_mainCameraEntt = m_activeScene->CreateEntity("Main Camera");
 		m_mainCameraEntt.AddComponent<CameraComponent>().Primary = true;
@@ -46,14 +46,14 @@ namespace Hazel {
 				glm::vec3& translation = GetComponent<TransformComponent>().Translation;
 				const float kSpeed = 5.0f;
 
-				if (Input::IsKeyPressed(HZ_KEY_A))
+				if (Input::IsKeyPressed(Key::A))
 					translation.x -= kSpeed * ts;
-				else if (Input::IsKeyPressed(HZ_KEY_D))
+				else if (Input::IsKeyPressed(Key::D))
 					translation.x += kSpeed * ts;
 
-				if (Input::IsKeyPressed(HZ_KEY_W))
+				if (Input::IsKeyPressed(Key::W))
 					translation.y += kSpeed * ts;
-				else if (Input::IsKeyPressed(HZ_KEY_S))
+				else if (Input::IsKeyPressed(Key::S))
 					translation.y -= kSpeed * ts;
 			}
 		};
@@ -61,10 +61,6 @@ namespace Hazel {
 		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 
 		m_scenePanel.SetContext(m_activeScene);
-
-		SceneSerializer serializer(m_activeScene);
-		serializer.Serialize("Assets/Scenes/scene.hazel");
-		//serializer.Dserialize("Assets/Scenes/scene.hazel");
 	}
 
 	void EditorLayer::OnDetach()
@@ -133,7 +129,7 @@ namespace Hazel {
 
 		// DockSpace
 		ImGuiIO& io = ImGui::GetIO();
-		
+
 		ImGuiStyle& style = ImGui::GetStyle();
 		float defaultMinWidth = style.WindowMinSize.x;
 		style.WindowMinSize.x = 385.0f;
@@ -148,8 +144,15 @@ namespace Hazel {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					NewScene();
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					OpenSceneFile();
+				if (ImGui::MenuItem("Save As...", "Ctrl+S"))
+					SaveSceneFileAs();
 				if (ImGui::MenuItem("Exit"))
 					Application::Get().Close();
+
 				ImGui::EndMenu();
 			}
 			ImGui::EndMenuBar();
@@ -188,6 +191,69 @@ namespace Hazel {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
+		// Don't allow imgui to block events, let propagate to EditorLayer.
+		// Shortcuts are always available.
+		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(false);
+
+		EventDispatcher dispatcher(e);
+		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+	}
+
+
+	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
+	{
+		bool controlHolded = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		switch (e.GetKeyCode())
+		{
+		case Key::N:
+		{
+			if (controlHolded)
+				NewScene();
+		}; break;
+		case Key::O:
+		{
+			if (controlHolded)
+				OpenSceneFile();
+		}; break;
+		case Key::S:
+		{
+			if (controlHolded)
+				SaveSceneFileAs();
+		}; break;
+		}
+		return true;
+	}
+
+	void EditorLayer::NewScene()
+	{
+		m_activeScene = CreateRef<Scene>();
+		m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+		m_scenePanel.SetContext(m_activeScene);
+	}
+
+	void EditorLayer::OpenSceneFile()
+	{
+		auto filename = FileDialog::OpenFile("Hazel Scene (*.hazel)\0*.hazel\0");
+		if (filename)
+		{
+			// @NOTE: Deserialized scene doesn't contain scripts binded to entities
+
+			m_activeScene = CreateRef<Scene>();
+			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_scenePanel.SetContext(m_activeScene);
+			SceneSerializer serializer(m_activeScene);
+			serializer.Deserialize(*filename);
+		}
+	}
+
+	void EditorLayer::SaveSceneFileAs()
+	{
+		auto filename = FileDialog::SaveFile("Hazel Scene (*.hazel)\0*.hazel\0");
+		if (filename)
+		{
+			SceneSerializer serializer(m_activeScene);
+			serializer.Serialize(*filename);
+		}
 	}
 
 }

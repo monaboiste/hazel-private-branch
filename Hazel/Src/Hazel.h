@@ -34,6 +34,9 @@
 #include "Hazel\Scene\Entity.h"
 #include "Hazel\Scene\ScriptableEntity.h"
 
+// Utils
+#include "Hazel\Utils\PlatformUtils.h"
+
 // ---ImGui Console and Debug---------
 #include "Hazel\ImGui\ImGuiConsole.h"
 #include "Hazel\Debug\Instrumentor.h"
