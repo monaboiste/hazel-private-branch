@@ -117,7 +117,7 @@ namespace Hazel {
 			out << YAML::Key << "Camera" << YAML::Value;
 			out << YAML::BeginMap;
 			out << YAML::Key << "ProjectionType" << YAML::Value << (uint32_t)camera.GetProjectionType();
-			out << YAML::Key << "PerspectiveVertivalFOV" << YAML::Value << camera.GetPerspectiveVertivalFOV();
+			out << YAML::Key << "PerspectiveVerticalFOV" << YAML::Value << camera.GetPerspectiveVertivalFOV();
 			out << YAML::Key << "PerspectiveNearClip" << YAML::Value << camera.GetPerspectiveNearClip();
 			out << YAML::Key << "PerspectiveFarClip" << YAML::Value << camera.GetPerspectiveFarClip();
 			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.GetOrthographicSize();
@@ -223,7 +223,7 @@ namespace Hazel {
 						auto& cc = deserializedEntity.AddComponent<CameraComponent>();
 						uint32_t projectionType = camera["ProjectionType"].as<uint32_t>();
 						cc.Camera.SetProjectionType((SceneCamera::ProjectionType)projectionType);
-						float fov = camera["PerspectiveVertivalFOV"].as<float>();
+						float fov = camera["PerspectiveVerticalFOV"].as<float>();
 						cc.Camera.SetPerspectiveVertivalFOV(fov);
 						float perspertiveNearClip = camera["PerspectiveNearClip"].as<float>();
 						cc.Camera.SetPerspectiveNearClip(perspertiveNearClip);
