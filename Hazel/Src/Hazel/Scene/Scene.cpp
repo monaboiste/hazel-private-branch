@@ -101,6 +101,18 @@ namespace Hazel {
 		m_registry.destroy(entity);
 	}
 
+	Entity Scene::GetPrimaryActiveCameraEntity()
+	{
+		auto view = m_registry.view<CameraComponent>();
+		for (auto entity : view)
+		{
+			const auto camera = view.get<CameraComponent>(entity);
+			if (camera.Primary)
+				return Entity(const_cast<Scene*>(this), entity);
+		}
+		return {};
+	}
+
 	// ------
 	template <typename T>
 	void Scene::OnComponentAdded(Entity, T& component)

@@ -1,4 +1,5 @@
 #include <imgui\imgui.h>
+#include <ImGuizmo\ImGuizmo.h>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
 
@@ -23,6 +24,7 @@ namespace Hazel {
 		// Scene
 		m_activeScene = CreateRef<Scene>();
 
+#if 0
 		m_orangeSquareEntt = m_activeScene->CreateEntity("Square");
 		m_orangeSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 
@@ -59,8 +61,13 @@ namespace Hazel {
 		};
 
 		m_mainCameraEntt.AddComponent<NativeScriptComponent>().Bind<CameraController>();
-
+#else
+		m_activeScene = CreateRef<Scene>();
+		m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_scenePanel.SetContext(m_activeScene);
+		SceneSerializer serializer(m_activeScene);
+		serializer.Deserialize("Assets/Scenes/fake-cube.hazel");
+#endif
 	}
 
 	void EditorLayer::OnDetach()
@@ -179,6 +186,34 @@ namespace Hazel {
 
 		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
+
+		// Gizmo
+		Entity selectedEntity = m_scenePanel.GetSelectedEntity();
+		if (selectedEntity)
+		{
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			auto cameraEntity = m_activeScene->GetPrimaryActiveCameraEntity();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			const glm::mat4& cameraProjection = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Entity
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), 
+								 ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+
+
+		}
+
 
 		ImGui::End();
 		ImGui::PopStyleVar();

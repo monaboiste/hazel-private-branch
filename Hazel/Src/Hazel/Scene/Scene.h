@@ -21,6 +21,8 @@ namespace Hazel {
 
 		Entity CreateEntity(const std::string& name = "");
 		void DestroyEntity(Entity entity);
+
+		Entity GetPrimaryActiveCameraEntity();
 	
 	private:
 		template <typename T>

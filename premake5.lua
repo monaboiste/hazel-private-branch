@@ -183,12 +183,7 @@ project "Hazelnut"
 	files
 	{
 		"%{prj.name}/Src/**.h",
-		"%{prj.name}/Src/**.cpp",
-		"Hazel/Vendor/glm/glm/**.hpp",
-		"Hazel/Vendor/glm/glm/**.inl",
-		
-		"Hazel/Vendor/ImGuizmo/ImGuizmo.h",
-		"Hazel/Vendor/ImGuizmo/ImGuizmo.cpp"
+		"%{prj.name}/Src/**.cpp"
 	}
 
 	includedirs
@@ -197,6 +192,7 @@ project "Hazelnut"
 		"Hazel/Src",
 		"Hazel/Vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.entt}",
 	}
