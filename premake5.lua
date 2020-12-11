@@ -21,6 +21,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Hazel/Vendor/GLFW/include"
 IncludeDir["Glad"] = "Hazel/Vendor/Glad/include"
 IncludeDir["ImGui"] = "Hazel/Vendor/imgui"
+IncludeDir["ImGuizmo"] = "Hazel/Vendor/ImGuizmo"
 IncludeDir["glm"] = "Hazel/Vendor/glm"
 IncludeDir["stb"] = "Hazel/Vendor/stb"
 IncludeDir["entt"] = "Hazel/Vendor/entt/include"
@@ -56,7 +57,10 @@ project "Hazel"
 		"%{prj.name}/Vendor/stb/**.cpp",
 		
 		"%{prj.name}/Vendor/glm/glm/**.hpp",
-		"%{prj.name}/Vendor/glm/glm/**.inl"
+		"%{prj.name}/Vendor/glm/glm/**.inl",
+
+		"%{prj.name}/Vendor/ImGuizmo/ImGuizmo.h",
+		"%{prj.name}/Vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs
@@ -66,6 +70,7 @@ project "Hazel"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb}",
 		"%{IncludeDir.entt}",
@@ -85,6 +90,9 @@ project "Hazel"
 		"yaml-cpp",
 		"opengl32.lib"
 	}
+	
+	filter "files:Hazel/Vendor/ImGuizmo/**.cpp"
+		flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"
@@ -125,8 +133,8 @@ project "Sandbox"
 	{
 		"%{prj.name}/Src/**.h",
 		"%{prj.name}/Src/**.cpp",
-		"%{prj.name}/Vendor/glm/glm/**.hpp",
-		"%{prj.name}/Vendor/glm/glm/**.inl"
+		"Hazel/Vendor/glm/glm/**.hpp",
+		"Hazel/Vendor/glm/glm/**.inl"
 	}
 
 	includedirs
@@ -176,8 +184,11 @@ project "Hazelnut"
 	{
 		"%{prj.name}/Src/**.h",
 		"%{prj.name}/Src/**.cpp",
-		"%{prj.name}/Vendor/glm/glm/**.hpp",
-		"%{prj.name}/Vendor/glm/glm/**.inl"
+		"Hazel/Vendor/glm/glm/**.hpp",
+		"Hazel/Vendor/glm/glm/**.inl",
+		
+		"Hazel/Vendor/ImGuizmo/ImGuizmo.h",
+		"Hazel/Vendor/ImGuizmo/ImGuizmo.cpp"
 	}
 
 	includedirs
@@ -186,6 +197,7 @@ project "Hazelnut"
 		"Hazel/Src",
 		"Hazel/Vendor",
 		"%{IncludeDir.glm}",
+		"%{IncludeDir.ImGuizmo}",
 		"%{IncludeDir.entt}",
 	}
 
