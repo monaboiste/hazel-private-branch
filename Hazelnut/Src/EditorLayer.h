@@ -30,6 +30,8 @@ namespace Hazel {
 		Ref<FrameBuffer> m_frameBuffer;
 
 		glm::vec2 m_viewportSize = { 1080.0f, 720.0f };
+		bool m_viewportFocused = true;
+		bool m_viewportHovered = true;
 
 		Ref<Scene> m_activeScene;
 		Entity m_orangeSquareEntt;
