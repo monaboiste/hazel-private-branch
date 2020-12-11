@@ -37,6 +37,7 @@ namespace Hazel {
 		Entity m_mainCameraEntt;
 		Entity m_secondCameraEntt;
 		bool m_primaryCamera = true;
+		int m_gizmoType = -1;
 
 		// Panels
 		SceneHierarchyPanel m_scenePanel;
