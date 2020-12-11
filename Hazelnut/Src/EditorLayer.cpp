@@ -2,6 +2,7 @@
 #include <ImGuizmo\ImGuizmo.h>
 #include <glm\gtc\matrix_transform.hpp>
 #include <glm\gtc\type_ptr.hpp>
+#include "Hazel\Math\Math.h"
 
 #include "EditorLayer.h"
 
@@ -189,7 +190,7 @@ namespace Hazel {
 
 		// Gizmo
 		Entity selectedEntity = m_scenePanel.GetSelectedEntity();
-		if (selectedEntity)
+		if (selectedEntity && m_gizmoType != -1)
 		{
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
@@ -208,10 +209,20 @@ namespace Hazel {
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 
-			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection), 
-								 ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
 
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
+								 (ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
 
+			if (ImGuizmo::IsUsing())
+			{
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				tc.Translation = translation;
+				tc.Rotation = rotation;
+				tc.Scale = scale;
+			}
 		}
 
 
@@ -254,6 +265,23 @@ namespace Hazel {
 		{
 			if (controlHolded)
 				SaveSceneFileAs();
+		}; break;
+		// Gizmo
+		case Key::Escape:
+		{
+			m_gizmoType = -1;
+		}; break;
+		case Key::E:
+		{
+			m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
+		}; break;
+		case Key::R:
+		{
+			m_gizmoType = ImGuizmo::OPERATION::ROTATE;
+		}; break;
+		case Key::T:
+		{
+			m_gizmoType = ImGuizmo::OPERATION::SCALE;
 		}; break;
 		}
 		return true;
