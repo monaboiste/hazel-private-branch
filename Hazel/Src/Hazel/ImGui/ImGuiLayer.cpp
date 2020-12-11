@@ -2,6 +2,7 @@
 #include "ImGuiLayer.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
 
 #include "Hazel\ImGui\ImGuiBuild.h"
 #include "Hazel\Core\Application.h"
@@ -34,8 +35,8 @@ namespace Hazel {
 		ImGui::StyleColorsDark();
 
 		// Fonts
-		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/fonts/FiraSans-Regular.ttf", 16.0f);
-		io.Fonts->AddFontFromFileTTF("Assets/fonts/FiraSans-Bold.ttf", 16.0f);
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Assets/Fonts/FiraSans-Regular.ttf", 16.0f);
+		io.Fonts->AddFontFromFileTTF("Assets/Fonts/FiraSans-Bold.ttf", 16.0f);
 
 		// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones
 		ImGuiStyle& style = ImGui::GetStyle();
@@ -81,6 +82,7 @@ namespace Hazel {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()
