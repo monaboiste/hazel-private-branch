@@ -182,6 +182,10 @@ namespace Hazel {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 
+		m_viewportFocused = ImGui::IsWindowFocused();
+		m_viewportHovered = ImGui::IsWindowHovered();
+		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused && !m_viewportHovered);
+
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
@@ -209,9 +213,15 @@ namespace Hazel {
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
 
+			// Snapping
+			bool snap = Input::IsKeyPressed(Key::A);
+			float snapValue = (m_gizmoType == ImGuizmo::OPERATION::ROTATE ? 45.0f : 0.5f);
+
+			float snapValues[3] = { snapValue, snapValue, snapValue };
 
 			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(cameraProjection),
-								 (ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform));
+								 (ImGuizmo::OPERATION)m_gizmoType, ImGuizmo::MODE::LOCAL, glm::value_ptr(transform),
+								 nullptr, (snap ? snapValues : nullptr));
 
 			if (ImGuizmo::IsUsing())
 			{
@@ -237,10 +247,6 @@ namespace Hazel {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		// Don't allow imgui to block events, let propagate to EditorLayer.
-		// Shortcuts are always available.
-		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(false);
-
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
 	}
@@ -271,7 +277,7 @@ namespace Hazel {
 		{
 			m_gizmoType = -1;
 		}; break;
-		case Key::E:
+		case Key::T:
 		{
 			m_gizmoType = ImGuizmo::OPERATION::TRANSLATE;
 		}; break;
@@ -279,7 +285,7 @@ namespace Hazel {
 		{
 			m_gizmoType = ImGuizmo::OPERATION::ROTATE;
 		}; break;
-		case Key::T:
+		case Key::E:
 		{
 			m_gizmoType = ImGuizmo::OPERATION::SCALE;
 		}; break;
