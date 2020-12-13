@@ -2,19 +2,25 @@
 	path = hazel/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
 	branch = v1.x
+	ignore = dirty
 [submodule "hazel/vendor/GLFW"]
 	path = hazel/vendor/GLFW
 	url = https://github.com/TheCherno/glfw.git
+	ignore = dirty
 [submodule "hazel/vendor/glm"]
 	path = hazel/vendor/glm
 	url = https://github.com/g-truc/glm.git
+	ignore = dirty
 [submodule "hazel/vendor/imgui"]
 	path = hazel/vendor/imgui
 	url = https://github.com/TheCherno/imgui.git
 	branch = docking
+	ignore = dirty
 [submodule "Hazel/Vendor/yaml-cpp"]
 	path = Hazel/Vendor/yaml-cpp
 	url = https://github.com/TheCherno/yaml-cpp
+	ignore = dirty
 [submodule "Hazel/vendor/ImGuizmo"]
 	path = Hazel/vendor/ImGuizmo
 	url = https://github.com/TheCherno/ImGuizmo
+	ignore = dirty
