@@ -22,10 +22,9 @@ namespace Hazel {
 		fbSpec.Height = 720;
 		m_frameBuffer = FrameBuffer::Create(fbSpec);
 
+#if 0
 		// Scene
 		m_activeScene = CreateRef<Scene>();
-
-#if 0
 		m_orangeSquareEntt = m_activeScene->CreateEntity("Square");
 		m_orangeSquareEntt.AddComponent<SpriteRendererComponent>(glm::vec4(1.0f, 0.3f, 0.0f, 1.0f));
 
@@ -66,6 +65,10 @@ namespace Hazel {
 		m_activeScene = CreateRef<Scene>();
 		m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 		m_scenePanel.SetContext(m_activeScene);
+
+		m_editorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f);
+		m_editorCamera.SetViewportSize(m_viewportSize.x, m_viewportSize.y);
+
 		SceneSerializer serializer(m_activeScene);
 		serializer.Deserialize("Assets/Scenes/fake-cube.hazel");
 #endif
@@ -88,13 +91,21 @@ namespace Hazel {
 		{
 			m_frameBuffer->Resize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
 			m_activeScene->OnViewportResize((uint32_t)m_viewportSize.x, (uint32_t)m_viewportSize.y);
+			m_editorCamera.SetViewportSize(m_viewportSize.x, m_viewportSize.y);
 		}
 
 		m_frameBuffer->Bind();
+		// Render
 		RenderCommand::SetClearColor({ 0.15f, 0.1f, 0.1f, 1 });
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
-		m_activeScene->OnUpdate(ts);
+
+		// Update
+		if (m_viewportFocused)
+			m_editorCamera.OnUpdate(ts);
+		// Update Scene
+		m_activeScene->OnUpdateEditor(ts, m_editorCamera);
+
 		m_frameBuffer->Unbind();
 	}
 
@@ -203,12 +214,16 @@ namespace Hazel {
 			float windowHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-			// Camera
-			auto cameraEntity = m_activeScene->GetPrimaryActiveCameraEntity();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			const glm::mat4& cameraProjection = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			// Runtime Camera
+			//auto cameraEntity = m_activeScene->GetPrimaryActiveCameraEntity();
+			//const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			//const glm::mat4& cameraProjection = camera.GetProjection();
+			//glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
 
+			// Editor Camera
+			const glm::mat4& cameraProjection = m_editorCamera.GetProjection();
+			glm::mat4 cameraView = m_editorCamera.GetView();
+			
 			// Entity
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
@@ -249,6 +264,9 @@ namespace Hazel {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(HZ_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
+
+		if (m_viewportFocused && m_viewportHovered)
+			m_editorCamera.OnEvent(e);
 	}
 
 

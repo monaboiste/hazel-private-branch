@@ -131,6 +131,22 @@ namespace Hazel {
 		s_data.TexSlotIndex = 1;
 	}
 
+	void Renderer2D::BeginScene(const EditorCamera& camera)
+	{
+		HZ_PROFILE_FUNCTION();
+
+		glm::mat4 viewProjection = camera.GetViewProjection();
+
+		s_data.QuadShader->Bind();
+		s_data.QuadShader->SetMat4("u_viewProjection", viewProjection);
+
+		s_data.QuadIndexCount = 0;
+		s_data.QuadVertexBufferPtr = s_data.QuadVertexBufferBase;
+
+		s_data.TexSlotIndex = 1;
+
+	}
+
 	void Renderer2D::BeginScene(const OrthographicCamera& camera)
 	{
 		HZ_PROFILE_FUNCTION();

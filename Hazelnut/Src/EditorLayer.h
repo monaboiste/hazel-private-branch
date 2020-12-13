@@ -34,6 +34,7 @@ namespace Hazel {
 		bool m_viewportHovered = true;
 
 		Ref<Scene> m_activeScene;
+		EditorCamera m_editorCamera;
 		Entity m_orangeSquareEntt;
 		Entity m_greenSquareEntt;
 		Entity m_mainCameraEntt;
