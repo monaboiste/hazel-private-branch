@@ -1,7 +1,11 @@
 # Binaries
 Bin/
-!Vendor/premake/Bin/
 Bin-Int/
+!Vendor/premake/Bin/
+**.lib
+
+# Debugger symbols
+**.pdb
 
 # Directories
 .vs/
