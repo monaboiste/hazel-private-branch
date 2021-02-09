@@ -22,12 +22,12 @@ namespace Hazel {
 		glm::vec2 delta = (mouse - m_initialMousePosition) * 0.003f;
 		m_initialMousePosition = mouse;
 
-		if (Input::IsMouseButtonPressed(Mouse::ButtonMiddle))
+		if (Input::IsMouseButtonPressed(Mouse::ButtonLeft))
 			MousePan(delta);
 		if ((Input::IsMouseButtonPressed(Mouse::ButtonLeft)) && (Input::IsKeyPressed(Key::LeftAlt)))
 			MouseRotate(delta);
-		if ((Input::IsMouseButtonPressed(Mouse::ButtonRight)) && (Input::IsKeyPressed(Key::LeftAlt)))
-			MouseZoom(delta.y);
+		//if ((Input::IsMouseButtonPressed(Mouse::ButtonRight)) && (Input::IsKeyPressed(Key::LeftAlt)))
+		//	MouseZoom(delta.y);
 		UpdateView();
 	}
 
@@ -84,8 +84,8 @@ namespace Hazel {
 	void EditorCamera::MousePan(const glm::vec2& delta)
 	{
 		//auto [xSpeed, ySpeed] = PanSpeed();
-		float xSpeed = 0.5f;
-		float ySpeed = 0.5f;
+		float xSpeed = 0.2f;
+		float ySpeed = 0.2f;
 		m_focalPoint += -GetRightDirection() * delta.x * xSpeed * m_distance;
 		m_focalPoint += GetUpDirection() * delta.y * ySpeed * m_distance;
 	}
@@ -131,7 +131,7 @@ namespace Hazel {
 
 	float EditorCamera::ZoomSpeed() const
 	{
-		float distance = m_distance * 0.8f;
+		float distance = m_distance * 0.5f;
 		distance = std::max(distance, 0.0f);
 		float speed = distance * distance;
 		speed = std::min(speed, 100.0f); // max distance = 100.0f
