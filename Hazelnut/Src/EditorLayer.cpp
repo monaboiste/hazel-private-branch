@@ -20,6 +20,7 @@ namespace Hazel {
 		FrameBufferSpecification fbSpec;
 		fbSpec.Width = 1080;
 		fbSpec.Height = 720;
+		fbSpec.AttachmentSpec = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH };
 		m_frameBuffer = FrameBuffer::Create(fbSpec);
 
 #if 0
@@ -200,7 +201,7 @@ namespace Hazel {
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
+		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID(1);
 		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
 
 		// Gizmo
