@@ -14,6 +14,7 @@ namespace Hazel {
 		virtual void Unbind() override;
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
+		virtual int ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t y) override;
 
 		virtual const FrameBufferSpecification& GetSpecification() const override { return m_spec; }
 		void Invalidate();

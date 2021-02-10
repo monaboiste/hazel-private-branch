@@ -28,7 +28,8 @@ void main()
 #version 450 core
 
 layout(location = 0) out vec4 color;
-layout(location = 1) out vec4 mixedGreen;
+/* placeholder for entityId; id = -1 means invalid id */
+layout(location = 1) out int id;
 
 uniform sampler2D u_textures[32];
 
@@ -78,5 +79,5 @@ void main()
 	case 31: texColor *=  texture(u_textures[31], v_texCoord * v_tilingFactor); break;
 	}
 	color = texColor;
-	mixedGreen = texColor * vec4(0.1, 0.8, 0.1, 1.0);
+	id = 69;
 }

@@ -42,6 +42,8 @@ namespace Hazel {
 		bool m_primaryCamera = true;
 		int m_gizmoType = -1;
 
+		glm::vec2 m_viewportBounds[2];
+
 		// Panels
 		SceneHierarchyPanel m_scenePanel;
 	};

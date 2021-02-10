@@ -7,6 +7,8 @@ namespace Hazel {
 	enum class FramebufferTextureFormat
 	{
 		NONE = 0,
+		// Id
+		RED_INTEGER,
 		// Color
 		RGBA8,
 		// Depth/Stencil
@@ -54,6 +56,7 @@ namespace Hazel {
 		static Ref<FrameBuffer> Create(const FrameBufferSpecification& spec);
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
+		virtual int ReadPixel(uint32_t attachmentIndex, uint32_t x, uint32_t y) = 0;
 
 		virtual const FrameBufferSpecification& GetSpecification() const = 0;
 

@@ -20,7 +20,7 @@ namespace Hazel {
 		FrameBufferSpecification fbSpec;
 		fbSpec.Width = 1080;
 		fbSpec.Height = 720;
-		fbSpec.AttachmentSpec = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::DEPTH };
+		fbSpec.AttachmentSpec = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::DEPTH };
 		m_frameBuffer = FrameBuffer::Create(fbSpec);
 
 #if 0
@@ -106,6 +106,22 @@ namespace Hazel {
 			m_editorCamera.OnUpdate(ts);
 		// Update Scene
 		m_activeScene->OnUpdateEditor(ts, m_editorCamera);
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_viewportBounds[0].x;
+		my -= m_viewportBounds[0].y;
+
+		// Flip to match texture (bottom <0,0>)
+		my = m_viewportSize.y - my;
+
+		int mouseX = (int)mx;
+		int mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseX <= (int)m_viewportSize.x &&
+			mouseY >= 0 && mouseY <= (int)m_viewportSize.y)
+		{
+			int pixelData = m_frameBuffer->ReadPixel(1, mouseX, mouseY);
+		}
 
 		m_frameBuffer->Unbind();
 	}
@@ -194,6 +210,8 @@ namespace Hazel {
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
 		ImGui::Begin("Viewport");
 
+		ImVec2 viewportOffset = ImGui::GetCursorPos(); // includes tab bar
+
 		m_viewportFocused = ImGui::IsWindowFocused();
 		m_viewportHovered = ImGui::IsWindowHovered();
 		Application::Get().GetImGuiLayer()->SetBlockImGuiEvents(!m_viewportFocused && !m_viewportHovered);
@@ -201,8 +219,16 @@ namespace Hazel {
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID(1);
+		uint32_t textureID = m_frameBuffer->GetColorAttachmentRendererID();
 		ImGui::Image((ImTextureID)(intptr_t)textureID, { m_viewportSize.x, m_viewportSize.y }, { 0, 1 }, { 1, 0 }); // Image is flipped.
+
+		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = { minBound.x + m_viewportSize.x, minBound.y + m_viewportSize.y };
+		m_viewportBounds[0] = { minBound.x, minBound.y };
+		m_viewportBounds[1] = { maxBound.x, maxBound.y };
 
 		// Gizmo
 		Entity selectedEntity = m_scenePanel.GetSelectedEntity();
@@ -224,7 +250,7 @@ namespace Hazel {
 			// Editor Camera
 			const glm::mat4& cameraProjection = m_editorCamera.GetProjection();
 			glm::mat4 cameraView = m_editorCamera.GetView();
-			
+
 			// Entity
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();
 			glm::mat4 transform = tc.GetTransform();
