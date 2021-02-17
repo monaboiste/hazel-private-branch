@@ -69,10 +69,22 @@ namespace Hazel {
 		glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
 	}
 
+	static GLenum HazelTextureFormatToGL(FramebufferTextureFormat format)
+	{
+		switch (format)
+		{
+		case FramebufferTextureFormat::RED_INTEGER: return GL_RED_INTEGER;
+		case FramebufferTextureFormat::RGBA8: return GL_RGBA8;
+		}
+		HZ_CORE_ASSERT(false, "FramebufferTextureFormat not supported");
+		return GL_NONE;
+	}
+
+
 	OpenGLFrameBuffer::OpenGLFrameBuffer(const FrameBufferSpecification& spec)
 		: m_spec(spec)
 	{
-		for (auto attachment : m_spec.AttachmentSpec.Attachments)
+		for (auto& attachment : m_spec.AttachmentSpec.Attachments)
 		{
 			auto format = attachment.TextureFormat;
 			if (!IsDepthFormat(format))
@@ -143,7 +155,7 @@ namespace Hazel {
 
 		if (m_colorAttachmentIDs.size() > 1)
 		{
-			HZ_CORE_ASSERT(m_colorAttachmentIDs.size() <= 4, "Hazel supports up to 4 color attachments at the moment");
+			HZ_CORE_ASSERT(m_colorAttachmentIDs.size() < 4, "Hazel supports up to 4 color attachments at the moment");
 			GLenum buffers[4] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 			glDrawBuffers((GLsizei)m_colorAttachmentIDs.size(), buffers);
 		}
@@ -157,6 +169,16 @@ namespace Hazel {
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
+	
+	void OpenGLFrameBuffer::ClearColorAttachment(uint32_t attachmentIndex, int value) const
+	{
+		HZ_CORE_ASSERT(m_colorAttachmentIDs.size() < 4, "Hazel supports up to 4 color attachments at the moment");
+		auto& spec = m_colorAttachmentSpecs[attachmentIndex];
+
+		glClearTexImage(m_colorAttachmentIDs[attachmentIndex], 0, HazelTextureFormatToGL(spec.TextureFormat), GL_INT, &value);
+	}
+
+
 	void OpenGLFrameBuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererID);

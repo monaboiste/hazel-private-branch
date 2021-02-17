@@ -24,6 +24,8 @@ namespace Hazel {
 			HZ_CORE_ASSERT(index < m_colorAttachmentIDs.size(), "Out od bounds");
 			return m_colorAttachmentIDs[index];
 		}
+
+		virtual void ClearColorAttachment(uint32_t attachmentIndex, int value) const override;
 	
 	private:
 		uint32_t m_rendererID = 0;

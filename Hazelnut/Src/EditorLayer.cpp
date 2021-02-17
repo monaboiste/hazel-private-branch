@@ -101,6 +101,9 @@ namespace Hazel {
 		RenderCommand::Clear();
 		Renderer2D::ResetStats();
 
+		// Clear entity ID attachment to -1
+		m_frameBuffer->ClearColorAttachment(1, -1);
+
 		// Update
 		if (m_viewportFocused)
 			m_editorCamera.OnUpdate(ts);
@@ -121,6 +124,7 @@ namespace Hazel {
 			mouseY >= 0 && mouseY <= (int)m_viewportSize.y)
 		{
 			int pixelData = m_frameBuffer->ReadPixel(1, mouseX, mouseY);
+			HZ_WARN("pixel: {0}", pixelData);
 		}
 
 		m_frameBuffer->Unbind();

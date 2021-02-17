@@ -62,6 +62,8 @@ namespace Hazel {
 
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 
+		virtual void ClearColorAttachment(uint32_t attachmentIndex, int value) const = 0;
+
 		virtual void Bind() = 0;
 		virtual void Unbind() = 0;
 	};
